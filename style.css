@@ -1,0 +1,38 @@
+:root {
+  /* Colors */
+  --color-foreground: #222;
+  --color-background: #fff;
+  --color-foreground-faded: #888;
+  --color-background-faded: #eee;
+  --space1: 1px;
+  --space2: calc( var(--space1) * 1.6 );
+  --space3: calc( var(--space2) * 1.6 );
+  --space4: calc( var(--space3) * 1.6 );
+  --space5: calc( var(--space4) * 1.6 );
+  --space6: calc( var(--space5) * 1.6 );
+  --space7: calc( var(--space6) * 1.6 );
+  --space8: calc( var(--space7) * 1.6 );
+}
+
+body {
+  color: var(--color-foreground);
+  background: var(--color-background);
+  padding: 0;
+  margin: 0;
+}
+
+body > header {
+  border-bottom: solid thin var(--color-foreground-faded);
+  margin-bottom: var(--space3);
+}
+
+#logo img {
+  height: 200px;
+
+}
+
+#toolbar {
+  float: left;
+  padding: var(--space4);
+  border-right: solid thin var(--color-foreground-faded);
+}
