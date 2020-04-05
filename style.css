@@ -4,7 +4,7 @@
   --color-foreground: #222;
   --color-background: #fff;
   --color-foreground-faded: #888;
-  --color-background-faded: #eee;
+  --color-background-faded: #fefefe;
   --color-theme-darker: #ffbbcc;
   --color-theme-dark: #ffcccc;
   --color-theme-light: #ffddcc;
@@ -86,11 +86,12 @@ body>header h1 {
   list-style-type: none;
   padding: 0;
 }
-#sidebar ul li {
+#sidebar ul li a{
   padding: var(--space6);
 }
-#sidebar ul li li{
-  padding: var(--space4);
+nav ul li a {
+  width: 100%; /* menu item completely clickable*/
+  display: inline-block;
 }
 #sidebar nav ul li {
   position: relative;
@@ -105,7 +106,6 @@ body>header h1 {
   background: var(--color-background);
   color: var(--color-foreground-faded);
   box-shadow: var(--float1);
-  padding: var(--space6);
 }
 #sidebar nav ul li:hover>ul {
   display: block;
@@ -117,12 +117,12 @@ body>header h1 {
   cursor: pointer;
 }
 
-#application>article {
+#application>* {
   box-shadow: var(--float1);
   padding: var(--space6);
   margin: var(--space8) var(--space6);
 }
-#application>article:first-child {
+#application>*:first-child {
   margin-top: 0;
 }
 
@@ -143,16 +143,20 @@ button:hover {
   color: var(--color-foreground);
 }
 
-.action-header {
+article header,
+section header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   border: var(--space2)  solid var(--color-theme-darker);
   background-color: var(--color-theme-light);
   color: var(--color-foreground-faded);
+  padding: var(--space2) var(--space6);
+}
+
+.action-header {
   position: sticky;
   top: 0;
-  padding: var(--space2) var(--space6);
 }
 
 fieldset {
@@ -199,3 +203,26 @@ select {
   border: var(--space1) solid var(--color-theme-darker);
   border-radius: var(--space6);
 }
+
+table {
+  width: 100%;
+  margin: var(--space8) 0;
+  border-collapse: collapse;
+}
+
+tr, td, th {
+  border: var(--color-theme-lighter) solid thin;
+}
+
+tr:nth-child(2n+2) {
+  background: var(--color-background-faded);
+}
+
+th {
+  padding: var(--space6) var(--space5);
+}
+
+td {
+  padding: var(--space5);
+}
+
