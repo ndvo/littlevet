@@ -21,16 +21,6 @@ window.AppActions.formClient = function (id) {
     .stamp()
 }
 
-window.AppActions.formContato = function () {
-  Stamp('#fieldset-contato')
-    .stamp()
-}
-
-window.AppActions.formPatient = function () {
-  Stamp('#form-patient', { override: true })
-    .stamp()
-}
-
 window.AppActions.stamp = function(id) {
   Stamp(id, { override: true }).stamp()
 }

@@ -37,15 +37,12 @@
             </div>
             <div id="field-genero" class="field">
               <label>Gênero</label>
-              <select>
-                <option class="default">Selecione</option>
-                <option value="masculino">Masculino</option>
-                <option value="feminino">Feminino</option>
-              </select>
+                <input type="radio" name="genero" value="masculino">Masculino
+                <input type="radio" name="genero" value="feminino">Feminino
             </div>
             <fieldset id="fieldset-contatos">
               <legend>Contatos</legend>
-              <button onclick="AppActions.stamp('#fieldset-contato')">
+              <button type="button" onclick="AppActions.stamp('#fieldset-contato')">
                 Adicionar Contato
               </button>
               <template id="fieldset-contato">
@@ -74,7 +71,7 @@
       <template id="form-patients">
         <fieldset class="form patient">
           <legend> Adicionar pacientes </legend>
-          <button onclick="AppActions.formPatient()" type="button">
+          <button onclick="AppActions.stamp('#form-patient')" type="button">
             Novo Paciente
           </button>
           <template id="form-patient">
