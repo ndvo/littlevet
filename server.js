@@ -49,9 +49,9 @@ function getById (collection, id) {
   }
 }
 
-function setLocal (localKey, objectToStore) {
+function setLocal (collection, objectToStore) {
   console.debug("let's store")
-  const transaction = Server.db.transaction([localKey], 'readwrite')
+  const transaction = Server.db.transaction([collection], 'readwrite')
   console.debug(transaction)
   transaction.oncomplete = function (event) {
     console.debug('Transaction complete', event)
@@ -59,7 +59,7 @@ function setLocal (localKey, objectToStore) {
   transaction.onerror = function (event) {
     console.debug('Transaction error', event)
   }
-  const objStore = transaction.objectStore(localKey)
+  const objStore = transaction.objectStore(collection)
   const req = objStore.add(objectToStore, objectToStore.key)
   req.onsuccess = event => console.log('sucesso', event)
   req.onerror = event => console.error('Error in add ', event)
@@ -71,7 +71,8 @@ Server.setUpDatabase = function () {
     // Create Database
     request.onupgradeneeded = function (event) {
       const db = event.target.result
-      db.createObjectStore('clients', { keyPath: 'id' })
+      db.createObjectStore('clients',
+        { keyPath: 'id', autoIncrement: true })
         .createIndex('name', 'name', { unique: false })
       db.createObjectStore('templates', { keyPath: 'id' })
     }

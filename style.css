@@ -5,6 +5,10 @@
   --color-background: #fff;
   --color-foreground-faded: #888;
   --color-background-faded: #eee;
+  --color-theme-darker: #ffbbcc;
+  --color-theme-dark: #ffcccc;
+  --color-theme-light: #ffddcc;
+  --color-theme-lighter: #ffeecc;
   --space1: 1px;
   --space2: calc( var(--space1) * 1.6 );
   --space3: calc( var(--space2) * 1.6 );
@@ -56,7 +60,7 @@ body > header { grid-area: header; }
 
 /* Layout */
 body > header {
-  border-bottom: solid thin var(--color-foreground-faded);
+  border-bottom: solid thin var(--color-theme-darker);
   margin-bottom: var(--space3);
 }
 #application{
@@ -66,6 +70,7 @@ body > header {
 /* Header */
 body>header h1 {
   font-weight: normal;
+  font-size: 0.9em;
 }
 
 /* Sidebar */
@@ -74,7 +79,7 @@ body>header h1 {
 }
 #sidebar {
   padding: var(--space4);
-  border-right: solid thin var(--color-foreground-faded);
+  border-right: solid thin var(--color-theme-darker);
 }
 #sidebar ul {
   width: 100%;
@@ -98,7 +103,7 @@ body>header h1 {
   top: 0;
   left: 100%;
   background: var(--color-background);
-  color: var(--color-foreground);
+  color: var(--color-foreground-faded);
   box-shadow: var(--float1);
   padding: var(--space6);
 }
@@ -107,8 +112,8 @@ body>header h1 {
 }
 
 #sidebar nav ul>li:hover {
-  color: var(--color-background);
-  background: var(--color-foreground);
+  color: var(--color-foreground);
+  background: var(--color-theme-lighter);
   cursor: pointer;
 }
 
@@ -123,5 +128,74 @@ body>header h1 {
 
 /* UI */
 button {
-  border
+  border: var(--space1) var(--color-theme-dark) solid;
+  border-radius: var(--space6);
+  padding: var(--space6) var(--space8);
+  background: var(--color-theme-lighter);
+  color: var(--color-foreground-faded);
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.4s;
+}
+button:hover {
+  box-shadow: var(--space4) var(--space4) var(--space6) var(--color-foreground-faded);
+  background: var(--color-theme-darker);
+  color: var(--color-foreground);
+}
+
+.action-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: var(--space2)  solid var(--color-theme-darker);
+  background-color: var(--color-theme-light);
+  color: var(--color-foreground-faded);
+  position: sticky;
+  top: 0;
+  padding: var(--space2) var(--space6);
+}
+
+fieldset {
+  border-color: var(--color-theme-darker);
+  border-style: solid;
+  margin: var(--space8) 0;
+}
+legend {
+  background: var(--color-background);
+  color: var(--color-foreground-faded);
+  font-weight: bold;
+  border-radius: var(--space6);
+  border: var(--space2) solid var(--color-theme-darker);
+  padding: var(--space4) var(--space6);
+}
+
+label {
+  min-width: var(--space11);
+  display: inline-block;
+}
+
+.field {
+  margin: var(--space6) 0;
+}
+/* Input Typography */
+input, textarea, select {
+  font-family: "Quicksand", sans-serif;
+  font-size: 1.1em;
+}
+input, textarea, select {
+  padding: var(--space6);
+  border: var(--color-theme-dark) solid thin;
+  border-radius: var(--space6);
+}
+input[type=text], input[type=email] {
+  min-width: var(--space14);
+}
+textarea {
+  width: 100%;
+  height: var(--space11);
+}
+select {
+  background: var(--color-theme-lighter);
+  border: var(--space1) solid var(--color-theme-darker);
+  border-radius: var(--space6);
 }

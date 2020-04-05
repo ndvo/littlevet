@@ -27,40 +27,48 @@
 
       <template id="form-client">
         <article class="form client">
-          <header>
-            <h1> Adicionar responsável</h1>
-          </header>
-          <form>
-            <div id="field-nome" class="field">
-              <label for="field-nome-input">Nome</label>
-              <input id="field-nome-input" type="text">
-            </div>
-            <div id="field-genero" class="field">
-              <label>Gênero</label>
-                <input type="radio" name="genero" value="masculino">Masculino
-                <input type="radio" name="genero" value="feminino">Feminino
-            </div>
+          <form onsubmit="return AppActions.saveClient(event)">
+            <header class="action-header">
+              <h1> Adicionar responsável</h1>
+              <div class="actions">
+                <button class="action-abort" type="button">Cancelar</button>
+                <button class="action-save"
+                     type="submit"
+                     >Salvar</button>
+              </div>
+            </header>
+            <fieldset>
+              <legend>Identificação</legend>
+              <input type="hidden" name="client-id">
+              <div id="field-nome-client" class="field">
+                <label for="field-nome-input">Nome</label>
+                <input name="cliente-nome" id="field-nome-input" type="text">
+              </div>
+              <div id="field-cpf" class="field">
+                <label for="field-cpf-input">CPF</label>
+                <input name="cliente-cpf" id="field-cpf-input" type="text">
+              </div>
+              <div id="field-genero" class="field">
+                <label>Gênero</label>
+                <input type="radio" name="cliente-genero" value="masculino">Masculino
+                <input type="radio" name="cliente-genero" value="feminino">Feminino
+              </div>
+            </fieldset>
             <fieldset id="fieldset-contatos">
-              <legend>Contatos</legend>
-              <button type="button" onclick="AppActions.stamp('#fieldset-contato')">
-                Adicionar Contato
-              </button>
-              <template id="fieldset-contato">
-                <fieldset>
-                  <div class="field">
-                    <label>Email</label>
-                    <input type="radiobutton" name="contact-type" value="email">
-                  </div>
-                  <div>
-                    <label>Telefone</label>
-                    <input type="radiobutton" name="contact-type" value="phone">
-                  </div>
-                  <div>
-                    <label>Contato</label>
-                    <input type="text" name="contact-value">
-                  </div>
-                </fieldset>
-              </template>
+              <legend>Contato</legend>
+              <div class="field">
+                <label>Email</label>
+                <input type="email" name="contact-type" placeholder="emaildocliente@email.com">
+              </div>
+              <div class="field">
+                <label>Telefone</label>
+                <input type="text" name="contact-type" placeholder="(55) 5555-555555">
+                whatsapp? <input type="checkbox" name="whatsapp">
+              </div>
+              <div class="field">
+                <label>Endereço</label>
+                <textarea></textarea>
+              </div>
             </fieldset>
             <div class="form-actions">
             </div>
@@ -82,11 +90,8 @@
               </div>
               <div id="field-genero" class="field">
                 <label>Gênero</label>
-                <select>
-                  <option class="default">Selecione</option>
-                  <option value="masculino">Masculino</option>
-                  <option value="feminino">Feminino</option>
-                </select>
+                <input type="radio" name="genero" value="masculino">Masculino
+                <input type="radio" name="genero" value="feminino">Feminino
               </div>
               <div id="field-especie" class="field">
                 <label>Espécie</label>

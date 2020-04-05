@@ -1,5 +1,8 @@
 import Stamp from './node_modules/@dvo/stamp/src/stamp.js'
 import Server from './server.js'
+import Client from './clients/main.js'
+
+let previousForm;
 
 window.AppActions || (window.AppActions = {})
 
@@ -21,8 +24,23 @@ window.AppActions.formClient = function (id) {
     .stamp()
 }
 
-window.AppActions.stamp = function(id) {
+window.AppActions.stamp = function (id) {
   Stamp(id, { override: true }).stamp()
+}
+
+window.AppActions.saveClient = function (e) {
+  try {
+    const data = new FormData(e.target)
+    const client = {}
+    for (const entry of data.entries()) {
+      client[entry[0]] = entry[1]
+    }
+    new Client(data).save()
+    //Server.db.setLocal('clients', client)
+  } catch (e) {
+    console.error(e.message)
+  }
+  return false
 }
 
 setUp()
