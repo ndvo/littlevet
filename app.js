@@ -6,6 +6,23 @@ let previousForm;
 
 window.AppActions || (window.AppActions = {})
 
+window.AppActions.listClient = function () {
+  Stamp('#list-client')
+    .target('#application')
+    .clearAll()
+    .stamp()
+  Client.forEach(
+    function(client) {
+      Stamp('#card-client', { override: true })
+        .change(el => {
+          el.querySelector('.nome').innerText = client['cliente-nome']
+          el.querySelector('.telefone').innerText = client['cliente-telefone']
+        })
+        .stamp()
+    }
+  )
+}
+
 window.AppActions.formClient = function (id) {
   let formId
   Stamp('#form-client')
@@ -57,7 +74,9 @@ function uniquefy (element, count) {
 }
 
 window.AppActions.stamp = function (id) {
-  Stamp(id, { override: true }).stamp()
+  Stamp(id, { override: true })
+    .clear()
+    .stamp()
 }
 
 window.AppActions.saveClient = function (e) {

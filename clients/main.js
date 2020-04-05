@@ -1,20 +1,41 @@
 import Server from '../server.js'
 
 class Client {
-  collection = 'clients'
 
   constructor (data) {
-    let entries;
+    let entries
+    console.debug(data)
     if (data instanceof FormData) {
       entries = data.entries()
+    } else if (data instanceof IDBCursorWithValue) {
+      entries = Object.entries(data.value)
     } else {
       entries = Object.entries(data)
     }
-    for (const entry of data.entries()) {
+    console.debug(data.value, entries)
+    for (const entry of entries) {
       this[entry[0]] = entry[1]
     }
-    if (this.id == "")
-      delete this.id
+    if (this.id == '') delete this.id
+  }
+
+  static get collection () {
+    return 'clients'
+  }
+
+  static forEach(action) {
+    Server.db.transaction(this.collection)
+      .objectStore(this.collection)
+      .openCursor()
+      .onsuccess = function (event) {
+        const cursor = event.target.result
+        if (cursor) {
+          action(new Client(cursor))
+          cursor.continue()
+        } else {
+          console.log('complete');
+        }
+      }
   }
 
   save() {
