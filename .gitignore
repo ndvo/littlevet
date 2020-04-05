@@ -1,0 +1,6 @@
+# Vim files
+*.un~
+
+# NPM files
+node_modules/*
+
