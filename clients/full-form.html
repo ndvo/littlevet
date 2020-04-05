@@ -1,0 +1,33 @@
+<template id="form-client">
+  <article class="form client">
+    <header>
+      <h1> Adicionar responsável</h1>
+    </header>
+    <form>
+      <div id="field-nome" class="field">
+        <label for="field-nome-input">Nome</label>
+        <input id="field-nome-input" type="text">
+      </div>
+      <div id="field-genero" class="field">
+        <label>Gênero</label>
+        <select>
+          <option class="default">Selecione</option>
+          <option value="masculino">Masculino</option>
+          <option value="feminino">Feminino</option>
+        </select>
+      </div>
+      <fieldset id="fieldset-contatos">
+        <legend>Contatos</legend>
+        <template>
+          <div class="field">
+            <input type="radiobutton" name="contact-type" value="email">
+            <input type="radiobutton" name="contact-type" value="phone">
+            <input type="text" name="contact-value">
+          </div>
+        </template>
+      </fieldset>
+      <div class="form-actions">
+      </div>
+    </form>
+  </article>
+</template>

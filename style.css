@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css?family=Quicksand&display=swap');
 :root {
   /* Colors */
   --color-foreground: #222;
@@ -12,6 +13,27 @@
   --space6: calc( var(--space5) * 1.6 );
   --space7: calc( var(--space6) * 1.6 );
   --space8: calc( var(--space7) * 1.6 );
+  --space9: calc( var(--space8) * 1.6 );
+  --space10: calc( var(--space9) * 1.6 );
+  --space11: calc( var(--space10) * 1.6 );
+  --space12: calc( var(--space11) * 1.6 );
+  --space13: calc( var(--space12) * 1.6 );
+  --space14: calc( var(--space13) * 1.6 );
+  --space15: calc( var(--space14) * 1.6 );
+  --space16: calc( var(--space15) * 1.6 );
+  --space17: calc( var(--space16) * 1.6 );
+  --space18: calc( var(--space17) * 1.6 );
+  --space19: calc( var(--space18) * 1.6 );
+  --space20: calc( var(--space19) * 1.6 );
+  --menu-width:  var(--space12) ;
+  --float1: var(--space2) var(--space2) var(--space4);
+}
+
+/* Typography */
+body {
+  font-family: "Quicksand", sans-serif;
+  background: var(--color-background);
+  color: var(--color-foreground);
 }
 
 body {
@@ -19,20 +41,87 @@ body {
   background: var(--color-background);
   padding: 0;
   margin: 0;
+  display: grid;
+  grid-template-columns: var(--space12) 1fr;
+  grid-template-areas:  "header header "
+                        "sidebar main "
+                        "footer footer ";
 }
 
+/* Grid */
+body > header { grid-area: header; }
+#sidebar { grid-area: sidebar;}
+#application{ grid-area: main;}
+
+
+/* Layout */
 body > header {
   border-bottom: solid thin var(--color-foreground-faded);
   margin-bottom: var(--space3);
 }
-
-#logo img {
-  height: 200px;
-
+#application{
+  padding: var(--space5);
 }
 
-#toolbar {
-  float: left;
+/* Header */
+body>header h1 {
+  font-weight: normal;
+}
+
+/* Sidebar */
+#logo img {
+  height: 200px;
+}
+#sidebar {
   padding: var(--space4);
   border-right: solid thin var(--color-foreground-faded);
+}
+#sidebar ul {
+  width: 100%;
+  list-style-type: none;
+  padding: 0;
+}
+#sidebar ul li {
+  padding: var(--space6);
+}
+#sidebar ul li li{
+  padding: var(--space4);
+}
+#sidebar nav ul li {
+  position: relative;
+  background: var(--color-background);
+  color: var(--color-foreground);
+}
+#sidebar nav li ul {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 100%;
+  background: var(--color-background);
+  color: var(--color-foreground);
+  box-shadow: var(--float1);
+  padding: var(--space6);
+}
+#sidebar nav ul li:hover>ul {
+  display: block;
+}
+
+#sidebar nav ul>li:hover {
+  color: var(--color-background);
+  background: var(--color-foreground);
+  cursor: pointer;
+}
+
+#application>article {
+  box-shadow: var(--float1);
+  padding: var(--space6);
+  margin: var(--space8) var(--space6);
+}
+#application>article:first-child {
+  margin-top: 0;
+}
+
+/* UI */
+button {
+  border
 }

@@ -7,48 +7,122 @@
     <header>
       <h1>Little Pet</h1>
     </header>
-    <section id="toolbar">
+    <section id="sidebar">
       <div id="logo"><img src="img/logo.png"></div>
       <nav>
-        <li><a><img class="icon"> Home</a></li>
-        <li><a><img class="icon"> Agenda</a></li>
-        <li><a><img class="icon"> Clientes</a></li>
-        <li><a><img class="icon"> Consultas</a></li>
-        <li><a><img class="icon"> Vendas</a></li>
+        <ul>
+          <li><a><img class="icon"> Home</a></li>
+          <li><a><img class="icon"> Agenda</a></li>
+          <li><a><img class="icon"> Clientes</a>
+            <ul>
+              <li><a  onclick="AppActions.formClient('novo')">Novo cliente</a></li>
+            </ul>
+          </li>
+          <li><a><img class="icon"> Consultas</a></li>
+          <li><a><img class="icon"> Vendas</a></li>
+        </ul>
       </nav>
     </section>
     <section id="application">
-    </section>
-  </body>
 
-  <template id="form-client">
-      <article class="form client">
-      <header>Adicionar responsável</header>
-      <form>
-        <div id="field-nome" class="field">
-          <label for="field-nome-input">Nome</label>
-          <input id="field-nome-input" type="text">
-        </div>
-        <div id="field-genero" class="field">
-          <label>Gênero</label>
-          <select>
-            <option class="default">Selecione</option>
-            <option value="masculino">Masculino</option>
-            <option value="feminino">Feminino</option>
-          </select>
-        </div>
-        <fieldset id="fieldset-contatos">
-          <template>
-            <div class="field">
-              <input type="radiobutton" name="contact-type" value="email">
-              <input type="radiobutton" name="contact-type" value="phone">
-              <input type="text" name="contact-value">
+      <template id="form-client">
+        <article class="form client">
+          <header>
+            <h1> Adicionar responsável</h1>
+          </header>
+          <form>
+            <div id="field-nome" class="field">
+              <label for="field-nome-input">Nome</label>
+              <input id="field-nome-input" type="text">
             </div>
+            <div id="field-genero" class="field">
+              <label>Gênero</label>
+              <select>
+                <option class="default">Selecione</option>
+                <option value="masculino">Masculino</option>
+                <option value="feminino">Feminino</option>
+              </select>
+            </div>
+            <fieldset id="fieldset-contatos">
+              <legend>Contatos</legend>
+              <button onclick="AppActions.stamp('#fieldset-contato')">
+                Adicionar Contato
+              </button>
+              <template id="fieldset-contato">
+                <fieldset>
+                  <div class="field">
+                    <label>Email</label>
+                    <input type="radiobutton" name="contact-type" value="email">
+                  </div>
+                  <div>
+                    <label>Telefone</label>
+                    <input type="radiobutton" name="contact-type" value="phone">
+                  </div>
+                  <div>
+                    <label>Contato</label>
+                    <input type="text" name="contact-value">
+                  </div>
+                </fieldset>
+              </template>
+            </fieldset>
+            <div class="form-actions">
+            </div>
+          </form>
+        </article>
+      </template>
+
+      <template id="form-patients">
+        <fieldset class="form patient">
+          <legend> Adicionar pacientes </legend>
+          <button onclick="AppActions.formPatient()" type="button">
+            Novo Paciente
+          </button>
+          <template id="form-patient">
+            <fieldset>
+              <div id="field-nome" class="field">
+                <label for="field-nome-input">Nome</label>
+                <input id="field-nome-input" type="text">
+              </div>
+              <div id="field-genero" class="field">
+                <label>Gênero</label>
+                <select>
+                  <option class="default">Selecione</option>
+                  <option value="masculino">Masculino</option>
+                  <option value="feminino">Feminino</option>
+                </select>
+              </div>
+              <div id="field-especie" class="field">
+                <label>Espécie</label>
+                <select>
+                  <option class="default">Selecione</option>
+                  <option value="canino">Canino</option>
+                  <option value="felino">Felino</option>
+                </select>
+              </div>
+              <div id="field-nascimento" class="field">
+                <label for="field-nascimento-input">Nascimento</label>
+                <input id="field-nascimento-input" type="date">
+              </div>
+              <div id="field-raca" class="field">
+                <label for="field-raca-input">Raça</label>
+                <input id="field-raca-input" type="text">
+              </div>
+              <div id="field-pelagem" class="field">
+                <label for="field-pelagem-input">Pelagem</label>
+                <input id="field-pelagem-input" type="text">
+              </div>
+              <div id="field-situacao-falecido">
+                <label>Falecido</label>
+                <input type="checkbox" >
+              </div>
+            </fieldset>
           </template>
         </fieldset>
 
-      </form>
-      </article>
-  </template>
+      </template>
+
+    </section>
+  </body>
+
 
 </html>
