@@ -15,7 +15,9 @@
           <li><a><img class="icon"> Agenda</a></li>
           <li><a><img class="icon"> Clientes</a>
             <ul>
-              <li><a  onclick="AppActions.formClient('novo')">Novo cliente</a></li>
+              <li><a onclick="AppActions.listClient()">Relação de clientes</a></li>
+              <li><a onclick="AppActions.formClient('novo')">Novo cliente</a></li>
+
             </ul>
           </li>
           <li><a><img class="icon"> Consultas</a></li>
@@ -50,20 +52,26 @@
               </div>
               <div id="field-genero" class="field">
                 <label>Gênero</label>
-                <input type="radio" name="cliente-genero" value="masculino">Masculino
-                <input type="radio" name="cliente-genero" value="feminino">Feminino
+                <input type="radio" 
+                  id="cliente-genero-m"
+                  name="cliente-genero"
+                  value="masculino"><label for="cliente-genero-m">Masculino</label>
+                <input type="radio"
+                  id="cliente-genero-f"
+                  name="cliente-genero"
+                  value="feminino"><label for="cliente-genero-f">Feminino</label>
               </div>
             </fieldset>
             <fieldset id="fieldset-contatos">
               <legend>Contato</legend>
               <div class="field">
                 <label>Email</label>
-                <input type="email" name="contact-type" placeholder="emaildocliente@email.com">
+                <input type="email" name="cliente-email" placeholder="emaildocliente@email.com">
               </div>
               <div class="field">
                 <label>Telefone</label>
-                <input type="text" name="contact-type" placeholder="(55) 5555-555555">
-                whatsapp? <input type="checkbox" name="whatsapp">
+                <input type="text" name="cliente-telefone" placeholder="(55) 5555-555555">
+                whatsapp? <input type="cliente-whatsapp" name="whatsapp">
               </div>
               <div class="field">
                 <label>Endereço</label>
@@ -76,51 +84,55 @@
         </article>
       </template>
 
-      <template id="form-patients">
-        <fieldset class="form patient">
+      <template id="form-pacientes">
+        <fieldset id="cliente-pacientes" class="form patient">
           <legend> Adicionar pacientes </legend>
-          <button onclick="AppActions.stamp('#form-patient')" type="button">
+          <button onclick="AppActions.formPatient()" type="button">
             Novo Paciente
           </button>
-          <template id="form-patient">
+          <template id="form-paciente">
             <fieldset>
               <div id="field-nome" class="field">
-                <label for="field-nome-input">Nome</label>
-                <input id="field-nome-input" type="text">
+                <label >Nome</label>
+                <input name="paciente-nome-" type="text">
               </div>
               <div id="field-genero" class="field">
                 <label>Gênero</label>
-                <input type="radio" name="genero" value="masculino">Masculino
-                <input type="radio" name="genero" value="feminino">Feminino
+                <input type="radio" name="paciente-genero-" value="masculino">Masculino
+                <input type="radio" name="paciente-genero-" value="feminino">Feminino
               </div>
               <div id="field-especie" class="field">
                 <label>Espécie</label>
-                <select>
-                  <option class="default">Selecione</option>
-                  <option value="canino">Canino</option>
-                  <option value="felino">Felino</option>
-                </select>
+                  <input type="radio"
+                    name="paciente-especie-"
+                    id="paciente-especie-canino-"
+                    value="canino">
+                  <label for="paciente-especie-canino-">🐶 Canino</label>
+                  <input type="radio"
+                    name="paciente-especie-"
+                    id="paciente-especie-felino-"
+                    value="felino">
+                  <label for="paciente-especie-felino-">😹 Felino</label>
               </div>
               <div id="field-nascimento" class="field">
-                <label for="field-nascimento-input">Nascimento</label>
-                <input id="field-nascimento-input" type="date">
+                <label>Nascimento</label>
+                <input name="paciente-nascimento-" type="date">
               </div>
               <div id="field-raca" class="field">
-                <label for="field-raca-input">Raça</label>
-                <input id="field-raca-input" type="text">
+                <label>Raça</label>
+                <input name="paciente-raca-" type="text">
               </div>
               <div id="field-pelagem" class="field">
-                <label for="field-pelagem-input">Pelagem</label>
-                <input id="field-pelagem-input" type="text">
+                <label>Pelagem</label>
+                <input name="paciente-pelagem-" type="text">
               </div>
               <div id="field-situacao-falecido">
-                <label>Falecido</label>
-                <input type="checkbox" >
+                <label for="falecido-">Falecido</label>
+                <input id="falecido-" type="checkbox" >
               </div>
             </fieldset>
           </template>
         </fieldset>
-
       </template>
 
     </section>

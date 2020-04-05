@@ -12,16 +12,48 @@ window.AppActions.formClient = function (id) {
     .target('#application')
     .clearAll()
     .change(function (element) {
-      if (this.count) this.count += 1
-      else this.count = 1
+      incrementCount(this)
       formId = 'form-client' + this.count
       element.setAttribute('id', formId)
     })
     .stamp()
-  Stamp('#form-patients')
+  Stamp('#form-pacientes')
     .target('#' + formId + ' form')
+    .change(function (element) {
+      element.setAttribute('id', element.getAttribute('id') + this.count)
+    })
     .clear()
     .stamp()
+  Stamp('#form-paciente', { override: true })
+    .change(function (element) {
+      incrementCount(this)
+      uniquefy(element, this.count)
+    })
+    .stamp()
+}
+
+window.AppActions.formPatient = function () {
+  Stamp('#form-paciente')
+    .change(function (element) {
+      console.debug(this)
+      incrementCount(this)
+      uniquefy(element, this.count)
+    })
+    .stamp()
+}
+
+function incrementCount (o) {
+  if (o.count) o.count += 1
+  else o.count = 1
+}
+
+function uniquefy (element, count) {
+  for (const el of element.querySelectorAll('[name],[id],[for]')) {
+    for (const attr of ['name', 'id', 'for']) {
+      const value = el.getAttribute(attr)
+      if (value) el.setAttribute(attr, value + count)
+    }
+  }
 }
 
 window.AppActions.stamp = function (id) {
@@ -57,7 +89,6 @@ function prepareTemplates () {
   const templates = [
     'clients/full-form'
   ]
-  console.debug(Server)
   for (const t of templates) {
     Server.templates.get(t)
       .then(
