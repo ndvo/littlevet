@@ -1,6 +1,17 @@
 import Stamp from './node_modules/@dvo/stamp/src/stamp.js'
 import Server from './server.js'
-import Client from './clients/main.js'
+import Entity from './entity.js'
+import Tests from './test.js'
+
+const dev = true
+
+if (dev) {
+  console.debug(Tests)
+  for (const f of Tests) {
+    console.log('testing')
+    f()
+  }
+}
 
 let previousForm;
 
@@ -11,8 +22,8 @@ window.AppActions.listClient = function () {
     .target('#application')
     .clearAll()
     .stamp()
-  Client.forEach(
-    function(client) {
+  Entity.forEachInCollection('client',
+    function (client) {
       Stamp('#card-client', { override: true })
         .change(el => {
           el.querySelector('.nome').innerText = client['cliente-nome']
@@ -52,7 +63,6 @@ window.AppActions.formClient = function (id) {
 window.AppActions.formPatient = function () {
   Stamp('#form-paciente')
     .change(function (element) {
-      console.debug(this)
       incrementCount(this)
       uniquefy(element, this.count)
     })
@@ -73,6 +83,10 @@ function uniquefy (element, count) {
   }
 }
 
+window.nome = function() {
+  return 'bode'
+}
+
 window.AppActions.stamp = function (id) {
   Stamp(id, { override: true })
     .clear()
@@ -86,8 +100,12 @@ window.AppActions.saveClient = function (e) {
     for (const entry of data.entries()) {
       client[entry[0]] = entry[1]
     }
-    new Client(data).save()
-    //Server.db.setLocal('clients', client)
+    console.debug(data)
+    const entity = Entity.toEntity(data)
+    console.debug(entity)
+    entity.collection = 'client'
+    Entity.save(entity)
+    // Server.db.setLocal('clients', client)
   } catch (e) {
     console.error(e.message)
   }
@@ -100,7 +118,7 @@ function setUp () {
   Server.setUpDatabase()
     .then(
       //prepareTemplates,
-      console.error
+      console.log
     )
 }
 

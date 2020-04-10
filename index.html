@@ -71,11 +71,11 @@
               <div class="field">
                 <label>Telefone</label>
                 <input type="text" name="cliente-telefone" placeholder="(55) 5555-555555">
-                whatsapp? <input type="cliente-whatsapp" name="whatsapp">
+                whatsapp? <input name="cliente-whatsapp" type="checkbox">
               </div>
               <div class="field">
                 <label>Endereço</label>
-                <textarea></textarea>
+                <textarea name="cliente-endereco"></textarea>
               </div>
             </fieldset>
             <div class="form-actions">
@@ -92,43 +92,44 @@
           </button>
           <template id="form-paciente">
             <fieldset>
+              <input type="hidden" name="paciente-cliente-">
               <div id="field-nome" class="field">
                 <label >Nome</label>
-                <input name="paciente-nome-" type="text">
+                <input name="cliente-paciente-nome-" type="text">
               </div>
               <div id="field-genero" class="field">
                 <label>Gênero</label>
-                <input type="radio" name="paciente-genero-" value="masculino">Masculino
-                <input type="radio" name="paciente-genero-" value="feminino">Feminino
+                <input type="radio" name="cliente-paciente-genero-" value="masculino">Masculino
+                <input type="radio" name="cliente-paciente-genero-" value="feminino">Feminino
               </div>
               <div id="field-especie" class="field">
                 <label>Espécie</label>
                   <input type="radio"
-                    name="paciente-especie-"
+                    name="cliente-paciente-especie-"
                     id="paciente-especie-canino-"
                     value="canino">
                   <label for="paciente-especie-canino-">🐶 Canino</label>
                   <input type="radio"
-                    name="paciente-especie-"
+                    name="cliente-paciente-especie-"
                     id="paciente-especie-felino-"
                     value="felino">
                   <label for="paciente-especie-felino-">😹 Felino</label>
               </div>
               <div id="field-nascimento" class="field">
                 <label>Nascimento</label>
-                <input name="paciente-nascimento-" type="date">
+                <input name="cliente-paciente-nascimento-" type="date">
               </div>
               <div id="field-raca" class="field">
                 <label>Raça</label>
-                <input name="paciente-raca-" type="text">
+                <input name="cliente-paciente-raca-" type="text">
               </div>
               <div id="field-pelagem" class="field">
                 <label>Pelagem</label>
-                <input name="paciente-pelagem-" type="text">
+                <input name="cliente-paciente-pelagem-" type="text">
               </div>
               <div id="field-situacao-falecido">
-                <label for="falecido-">Falecido</label>
-                <input id="falecido-" type="checkbox" >
+                <label for="paciente-falecido-">Falecido</label>
+                <input id="paciente-falecido-" type="checkbox" >
               </div>
             </fieldset>
           </template>

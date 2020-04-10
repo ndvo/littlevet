@@ -71,9 +71,29 @@ Server.setUpDatabase = function () {
     // Create Database
     request.onupgradeneeded = function (event) {
       const db = event.target.result
-      db.createObjectStore('clients',
+      let objStore = db.createObjectStore('client',
         { keyPath: 'id', autoIncrement: true })
-        .createIndex('name', 'name', { unique: false })
+      objStore.createIndex('name', 'name', { unique: false })
+
+      objStore = db.createObjectStore('patient',
+        { keyPath: 'id', autoIncrement: true })
+      objStore.createIndex('name', 'name', { unique: false })
+      objStore.createIndex('species', 'species', { unique: false })
+
+      objStore = db.createObjectStore('appointment',
+        { keyPath: 'id', autoIncrement: true })
+      objStore.createIndex('date', 'date', { unique: false })
+
+      objStore = db.createObjectStore('anamnesis',
+        { keyPath: 'id', autoIncrement: true })
+      objStore.createIndex('date', 'date', { unique: false })
+      objStore.createIndex('patient', 'patient', { unique: false })
+
+      objStore = db.createObjectStore('exam',
+        { keyPath: 'id', autoIncrement: true })
+      objStore.createIndex('date', 'date', { unique: false })
+      objStore.createIndex('patient', 'patient', { unique: false })
+
       db.createObjectStore('templates', { keyPath: 'id' })
     }
     // Returns error
