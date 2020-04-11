@@ -4,3 +4,5 @@
 # NPM files
 node_modules/*
 
+*.swo
+*.swp
