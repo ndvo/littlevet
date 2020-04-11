@@ -36,17 +36,13 @@ Server.templates.get = function get (tpl) {
   })
 }
 
-function getById (collection, id) {
+function getById (collection, id, success, error = console.error) {
   const request = Server.db
     .transaction(collection)
     .objectStore(collection)
     .get(id)
-  request.onsuccess = (event) => {
-    console.debug(event.target.result)
-  }
-  request.onerror = (event) => {
-    console.error(event)
-  }
+  request.onsuccess = success
+  request.onerror = error
 }
 
 function setLocal (collection, objectToStore) {
@@ -71,30 +67,25 @@ Server.setUpDatabase = function () {
     // Create Database
     request.onupgradeneeded = function (event) {
       const db = event.target.result
-      let objStore = db.createObjectStore('client',
-        { keyPath: 'id', autoIncrement: true })
+      let objStore = db.createObjectStore('client', { keyPath: 'key' })
       objStore.createIndex('name', 'name', { unique: false })
 
-      objStore = db.createObjectStore('patient',
-        { keyPath: 'id', autoIncrement: true })
+      objStore = db.createObjectStore('patient', { keyPath: 'key' })
       objStore.createIndex('name', 'name', { unique: false })
       objStore.createIndex('species', 'species', { unique: false })
 
-      objStore = db.createObjectStore('appointment',
-        { keyPath: 'id', autoIncrement: true })
+      objStore = db.createObjectStore('appointment', { keyPath: 'key' })
       objStore.createIndex('date', 'date', { unique: false })
 
-      objStore = db.createObjectStore('anamnesis',
-        { keyPath: 'id', autoIncrement: true })
+      objStore = db.createObjectStore('anamnesis', { keyPath: 'key' })
       objStore.createIndex('date', 'date', { unique: false })
       objStore.createIndex('patient', 'patient', { unique: false })
 
-      objStore = db.createObjectStore('exam',
-        { keyPath: 'id', autoIncrement: true })
+      objStore = db.createObjectStore('exam', { keyPath: 'key' })
       objStore.createIndex('date', 'date', { unique: false })
       objStore.createIndex('patient', 'patient', { unique: false })
 
-      db.createObjectStore('templates', { keyPath: 'id' })
+      db.createObjectStore('templates', { keyPath: 'key' })
     }
     // Returns error
     request.onerror = reject

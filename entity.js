@@ -2,10 +2,29 @@ import Server from './server.js'
 
 const Entity = {
 
-  toEntity (data) {
+  /**
+   * Creates local keys to allow locally stored items to be referenced before
+   * remote persistance.
+   *
+   * It also allows objects to be referenced.
+   * It sets the key of the entity received and returns the key.
+   */
+  keyGen (entity) {
+    let key
+    if (!entity || !entity.key) {
+      key = new Date().getTime() + ':' + Math.random()
+      entity.key = key
+    } else {
+      key = entity.key
+    }
+    return key
+  },
+
+  toEntity (data, entity = null) {
     let entries
     if (data instanceof FormData) {
       entries = []
+      console.debug('aqui')
       for (const e of data.entries()) {
         const attr = this.nameToAttributes(this.fixName(e[0]))
         attr.value = e[1]
@@ -19,6 +38,7 @@ const Entity = {
       entries = Object.entries(data)
     }
     const fields = {}
+    if (entity) fields.entity = entity
     console.debug(entries)
     for (const e of entries) {
       let ctx = fields
@@ -40,9 +60,9 @@ const Entity = {
         ctx[e.entity][e.entityPosition][e.field] = e.value
       }
     }
-    console.debug(fields)
     if (fields.id === '') delete fields.id
-    return fields
+    console.debug(fields)
+    return this.keyfyRecursive(fields)
   },
 
   aggregateFields (fields) {
@@ -76,13 +96,11 @@ const Entity = {
     return splited.join('-')
   },
 
-  validName(name) {
+  validName (name) {
     const splited = name.split('-')
-    if (splited.length % 2)
-      return false
+    if (splited.length % 2) { return false }
     for (const i = 0; i++; i < splited.length) {
-      if (i % 2 && !this.isNumeric(splited[i]))
-        return false
+      if (i % 2 && !this.isNumeric(splited[i])) { return false }
     }
     return true
   },
@@ -124,18 +142,118 @@ const Entity = {
       }
   },
 
-  save (entity, success = () => {}, error = () => {}) {
+  /**
+   * Generates keys recursively for all entities in an entity
+   *
+   * Changes in place and returns the entity for convenience
+   */
+  keyfyRecursive (entity) {
+    this.keyGen(entity)
     console.debug(entity)
+    for (const entry of Object.entries(entity)) {
+      if (!entry[1]) continue
+      if (Server.db.objectStoreNames.contains(entry[0])) {
+        if (Array.isArray(entry[1])) {
+          for (const e of entry[1]) {
+            if (!e) continue
+            if (!e.entity) e.entity = entry[0]
+            this.keyGen(e)
+            e['related-' + entity.entity] = entity.key
+            this.keyfyRecursive(e)
+          }
+        } else {
+          if (!entry[1].entity) { entry[1].entity = entry[0] }
+          this.keyGen(entity[entry[0]])
+          entity[entry[0]]['related-' + entity.entity] = entity.key
+          this.keyfyRecursive(entity[entry[0]])
+        }
+      }
+    }
+    return entity
+  },
+
+  /**
+   * Un-nest entities, leaving references where there was nested
+   *
+   */
+  referencify (entity, entities = null) {
+    console.debug(entity)
+    if (!entities) entities = [entity]
+    else entities.push(entity)
+    for (const entry of Object.entries(entity)) {
+      if (Server.db.objectStoreNames.contains(entry[0])) {
+        if (Array.isArray(entry[1])) {
+          const idArray = []
+          entity[entry[0]] = idArray
+          for (const item of entry[1]) {
+            if (!item) continue
+            idArray.push(item.key)
+            this.referencify(item, entities)
+          }
+        } else {
+          entity[entry[0]] = entry[1].key
+          this.referencify(entry[1], entities)
+        }
+      }
+    }
+    console.debug(entities)
+    return entities
+  },
+
+  referenceToNesting (entity, complete, error = console.error) {
+    for (const entry of Object.entries(entity)) {
+      if (Server.db.objectStoreNames.contains(entry[0])) {
+        const collection = entry[0]
+        const transaction = Server.db.transaction(collection)
+        const store = transaction.objectStore(collection)
+        if (Array.isArray(entry[1])) {
+          for (let i = 0; i < entry[1].length; i++) {
+            store.get(entry[1][i])
+              .onsuccess = r => { entity[entry[0]][i] = r.target.result }
+          }
+        } else if (typeof entry[1] === 'string') {
+          store.get(entry[1])
+            .onsuccess = r => { entity[entry[0]] = r.target.result }
+        }
+        transaction.oncomplete = complete
+      }
+    }
+  },
+
+  /**
+   * Store a list of entities
+   *
+   * [entity, entity, entity ...]
+   */
+  storeAll (entities, resolve, reject) {
+    return new Promise((resolve, reject) => {
+      const transaction = Server.db.transaction(
+        Array.from(Server.db.objectStoreNames), 'readwrite'
+      )
+      for (const entity of entities) {
+        if (!entity.entity || !Server.db.objectStoreNames.contains(entity.entity)) {
+          console.error('Not an entity:', entity)
+          transaction.abort()
+        }
+        const store = transaction.objectStore(entity.entity)
+        const req = store.put(entity)
+        req.onsuccess = console.log
+        req.onerror = console.debug
+      }
+      transaction.oncomplete = resolve
+      transaction.onerror = reject
+      transaction.commit()
+    })
+  },
+
+  store (entity, success = () => {}, error = () => {}) {
     const req = Server.db.transaction(
-      [entity.collection],
+      [entity.entity],
       'readwrite')
-      .objectStore(entity.collection)
+      .objectStore(entity.entity)
       .add(entity)
     req.onsuccess = success
-    req.onerror = (e) => {
-      error(e)
-      console.debug(e)
-    }
+    req.onerror = error
   }
 
 }

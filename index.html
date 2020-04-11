@@ -41,24 +41,24 @@
             </header>
             <fieldset>
               <legend>Identificação</legend>
-              <input type="hidden" name="client-id">
+              <input type="hidden" name="client-key">
               <div id="field-nome-client" class="field">
                 <label for="field-nome-input">Nome</label>
-                <input name="cliente-nome" id="field-nome-input" type="text">
+                <input name="client-nome" id="field-nome-input" type="text">
               </div>
               <div id="field-cpf" class="field">
                 <label for="field-cpf-input">CPF</label>
-                <input name="cliente-cpf" id="field-cpf-input" type="text">
+                <input name="client-cpf" id="field-cpf-input" type="text">
               </div>
               <div id="field-genero" class="field">
                 <label>Gênero</label>
                 <input type="radio" 
                   id="cliente-genero-m"
-                  name="cliente-genero"
+                  name="client-genero"
                   value="masculino"><label for="cliente-genero-m">Masculino</label>
                 <input type="radio"
                   id="cliente-genero-f"
-                  name="cliente-genero"
+                  name="client-genero"
                   value="feminino"><label for="cliente-genero-f">Feminino</label>
               </div>
             </fieldset>
@@ -66,16 +66,16 @@
               <legend>Contato</legend>
               <div class="field">
                 <label>Email</label>
-                <input type="email" name="cliente-email" placeholder="emaildocliente@email.com">
+                <input type="email" name="client-email" placeholder="emaildocliente@email.com">
               </div>
               <div class="field">
                 <label>Telefone</label>
-                <input type="text" name="cliente-telefone" placeholder="(55) 5555-555555">
-                whatsapp? <input name="cliente-whatsapp" type="checkbox">
+                <input type="text" name="client-telefone" placeholder="(55) 5555-555555">
+                whatsapp? <input name="client-whatsapp" type="checkbox">
               </div>
               <div class="field">
                 <label>Endereço</label>
-                <textarea name="cliente-endereco"></textarea>
+                <textarea name="client-endereco"></textarea>
               </div>
             </fieldset>
             <div class="form-actions">
@@ -92,44 +92,44 @@
           </button>
           <template id="form-paciente">
             <fieldset>
-              <input type="hidden" name="paciente-cliente-">
+              <input type="hidden" name="client-patient--key">
               <div id="field-nome" class="field">
                 <label >Nome</label>
-                <input name="cliente-paciente-nome-" type="text">
+                <input name="client-patient--nome" type="text">
               </div>
               <div id="field-genero" class="field">
                 <label>Gênero</label>
-                <input type="radio" name="cliente-paciente-genero-" value="masculino">Masculino
-                <input type="radio" name="cliente-paciente-genero-" value="feminino">Feminino
+                <input type="radio" name="client-patient--genero" value="masculino">Masculino
+                <input type="radio" name="client-patient--genero" value="feminino">Feminino
               </div>
               <div id="field-especie" class="field">
                 <label>Espécie</label>
                   <input type="radio"
-                    name="cliente-paciente-especie-"
+                    name="client-patient--especie"
                     id="paciente-especie-canino-"
                     value="canino">
                   <label for="paciente-especie-canino-">🐶 Canino</label>
                   <input type="radio"
-                    name="cliente-paciente-especie-"
+                    name="client-patient--especie"
                     id="paciente-especie-felino-"
                     value="felino">
-                  <label for="paciente-especie-felino-">😹 Felino</label>
+                  <label for="paciente-especie--felino">😹 Felino</label>
               </div>
               <div id="field-nascimento" class="field">
                 <label>Nascimento</label>
-                <input name="cliente-paciente-nascimento-" type="date">
+                <input name="client-patient--nascimento" type="date">
               </div>
               <div id="field-raca" class="field">
                 <label>Raça</label>
-                <input name="cliente-paciente-raca-" type="text">
+                <input name="client-patient--raca" type="text">
               </div>
               <div id="field-pelagem" class="field">
                 <label>Pelagem</label>
-                <input name="cliente-paciente-pelagem-" type="text">
+                <input name="client-patient--pelagem" type="text">
               </div>
               <div id="field-situacao-falecido">
                 <label for="paciente-falecido-">Falecido</label>
-                <input id="paciente-falecido-" type="checkbox" >
+                <input name="client-patient--falecido" id="paciente--falecido" type="checkbox" >
               </div>
             </fieldset>
           </template>

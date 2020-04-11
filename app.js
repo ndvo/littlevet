@@ -3,70 +3,113 @@ import Server from './server.js'
 import Entity from './entity.js'
 import Tests from './test.js'
 
-const dev = true
+setUp()
 
-if (dev) {
-  console.debug(Tests)
-  for (const f of Tests) {
-    console.log('testing')
-    f()
-  }
+function setUp () {
+  Server.setUpDatabase()
+    .then(
+      // prepareTemplates,
+      (ev) => {
+        console.log('Database prepared', ev)
+        start()
+      }
+    )
 }
 
-let previousForm;
+function start () {
+  const dev = false
 
-window.AppActions || (window.AppActions = {})
-
-window.AppActions.listClient = function () {
-  Stamp('#list-client')
-    .target('#application')
-    .clearAll()
-    .stamp()
-  Entity.forEachInCollection('client',
-    function (client) {
-      Stamp('#card-client', { override: true })
-        .change(el => {
-          el.querySelector('.nome').innerText = client['cliente-nome']
-          el.querySelector('.telefone').innerText = client['cliente-telefone']
-        })
-        .stamp()
+  if (dev) {
+    console.debug('Test start')
+    for (const f of Tests) {
+      console.debug('Testing ', f.prototype.constructor.name, ':')
+      f()
     }
-  )
-}
+  }
 
-window.AppActions.formClient = function (id) {
-  let formId
-  Stamp('#form-client')
-    .target('#application')
-    .clearAll()
-    .change(function (element) {
-      incrementCount(this)
-      formId = 'form-client' + this.count
-      element.setAttribute('id', formId)
-    })
-    .stamp()
-  Stamp('#form-pacientes')
-    .target('#' + formId + ' form')
-    .change(function (element) {
-      element.setAttribute('id', element.getAttribute('id') + this.count)
-    })
-    .clear()
-    .stamp()
-  Stamp('#form-paciente', { override: true })
-    .change(function (element) {
-      incrementCount(this)
-      uniquefy(element, this.count)
-    })
-    .stamp()
-}
+  let previousForm
 
-window.AppActions.formPatient = function () {
-  Stamp('#form-paciente')
-    .change(function (element) {
-      incrementCount(this)
-      uniquefy(element, this.count)
-    })
-    .stamp()
+  window.AppActions || (window.AppActions = {})
+
+  window.AppActions.listClient = function () {
+    Stamp('#list-client')
+      .target('#application')
+      .clearAll()
+      .stamp()
+    Entity.forEachInCollection('client',
+      function (client) {
+        const c = client.value
+        Entity.referenceToNesting(c, (evt) => {
+          console.debug(c)
+          Stamp('#card-client', { override: true })
+            .change(el => {
+              el.querySelector('.nome').innerText = c.nome
+              el.querySelector('.telefone').innerText = c.telefone
+              el.querySelector('.email').innerText = c.email
+              el.querySelector('.pacientes').innerText = c.patient.map(p => p.nome).join(',')
+            })
+            .stamp()
+        })
+      }
+    )
+  }
+
+  window.AppActions.formClient = function (id) {
+    let formId
+    Stamp('#form-client')
+      .target('#application')
+      .clearAll()
+      .change(function (element) {
+        incrementCount(this)
+        formId = 'form-client' + this.count
+        element.setAttribute('id', formId)
+      })
+      .stamp()
+    Stamp('#form-pacientes')
+      .target('#' + formId + ' form')
+      .change(function (element) {
+        element.setAttribute('id', element.getAttribute('id') + this.count)
+      })
+      .clear()
+      .stamp()
+    Stamp('#form-paciente', { override: true })
+      .change(function (element) {
+        incrementCount(this)
+        uniquefy(element, this.count)
+      })
+      .stamp()
+  }
+
+  window.AppActions.formPatient = function () {
+    Stamp('#form-paciente')
+      .change(function (element) {
+        incrementCount(this)
+        uniquefy(element, this.count)
+      })
+      .stamp()
+  }
+
+  window.nome = function () {
+    return 'bode'
+  }
+
+  window.AppActions.stamp = function (id) {
+    Stamp(id, { override: true })
+      .clear()
+      .stamp()
+  }
+
+  window.AppActions.saveClient = function (e) {
+    try {
+      const data = new FormData(e.target)
+      const client = {}
+      const entity = Entity.toEntity(data, 'client')
+      Entity.storeAll(Entity.referencify(entity))
+    } catch (e) {
+      console.error(e.message)
+    }
+    return false
+  }
 }
 
 function incrementCount (o) {
@@ -77,50 +120,18 @@ function incrementCount (o) {
 function uniquefy (element, count) {
   for (const el of element.querySelectorAll('[name],[id],[for]')) {
     for (const attr of ['name', 'id', 'for']) {
-      const value = el.getAttribute(attr)
-      if (value) el.setAttribute(attr, value + count)
+      let value = el.getAttribute(attr)
+      if (value) {
+        if (value.match(/--/)) value = value.replace('--', '-' + count + '-')
+        else if (value.match(/-$/)) value = value + count
+        el.setAttribute(attr, value)
+      }
     }
   }
 }
 
-window.nome = function() {
-  return 'bode'
-}
 
-window.AppActions.stamp = function (id) {
-  Stamp(id, { override: true })
-    .clear()
-    .stamp()
-}
 
-window.AppActions.saveClient = function (e) {
-  try {
-    const data = new FormData(e.target)
-    const client = {}
-    for (const entry of data.entries()) {
-      client[entry[0]] = entry[1]
-    }
-    console.debug(data)
-    const entity = Entity.toEntity(data)
-    console.debug(entity)
-    entity.collection = 'client'
-    Entity.save(entity)
-    // Server.db.setLocal('clients', client)
-  } catch (e) {
-    console.error(e.message)
-  }
-  return false
-}
-
-setUp()
-
-function setUp () {
-  Server.setUpDatabase()
-    .then(
-      //prepareTemplates,
-      console.log
-    )
-}
 
 function prepareTemplates () {
   const templates = [

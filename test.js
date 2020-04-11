@@ -21,7 +21,6 @@ const Tests = [
     const n2 = Entity.nameToAttributes(Entity.fixName('client-name-0'))
     const n3 = Entity.nameToAttributes(Entity.fixName('patient-name-0', 'client'))
     const n4 = Entity.fixName('client-patient-name-0', 'other')
-    console.debug(n1)
     console.assert(!n1.parent && n1.entity === 'client' && parseInt(n1.fieldPosition, 10) === 0,
       'Should fix name and convert to Attributes ')
     console.assert(!n2.parent, 'Should not find parent if there is none')
@@ -43,6 +42,48 @@ const Tests = [
       entity.patient[0].appointment[0].date === 'today',
       entity
     )
+  },
+
+  function testKeyfyRecursive () {
+    Server.setUpDatabase()
+      .then(() => {
+        const obj = {
+          patient: [
+            { name: 'rex', appointment: [{ date: 'today' }] },
+            { name: 'doc', appointment: [{ date: 'yesterday' }] },
+            { name: 'clara', appointment: [{ date: 'tomorrow' }] }
+          ],
+          appointment: {date: 'yesterday'},
+          name: 'John',
+          email: 'john@john',
+          entity: 'client'
+        }
+        Entity.keyfyRecursive(obj)
+        console.assert(obj.key, obj )
+        console.assert(obj.patient[0].key)
+        console.assert(obj.patient[1].key)
+        console.assert(obj.patient[2].key)
+        console.assert(obj.appointment.key)
+      })
+  },
+
+
+  function testReferencify () {
+    Server.setUpDatabase()
+      .then(() => {
+        const obj = {
+          patient: [
+            { name: 'rex', appointment: [{ date: 'today' }] },
+            { name: 'doc', appointment: [{ date: 'yesterday' }] },
+            { name: 'clara', appointment: [{ date: 'tomorrow', patient: {name: 'Nelson'} }] }
+          ],
+          appointment: {date: 'yesterday'},
+          name: 'John',
+          email: 'john@john',
+          entity: 'client'
+        }
+        console.debug((Entity.referencify(Entity.keyfyRecursive(obj))))
+      })
   }
 
 ]
