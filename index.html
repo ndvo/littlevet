@@ -20,7 +20,7 @@
 
             </ul>
           </li>
-          <li><a><img class="icon"> Consultas</a></li>
+          <li><a onclick="AppActions.listConsultas()"><img class="icon"> Consultas</a></li>
           <li><a><img class="icon"> Vendas</a></li>
         </ul>
       </nav>
@@ -156,7 +156,12 @@
               <tr data-entity="client">
                 <td data-entity-field="nome" class="nome"></td>
                 <td data-entity-field="patient" class="pacientes">
-                  <template><button data-entity-field="nome"></button></template>
+                  <template>
+                    <button data-entity-field="nome"
+                      data-entity-attributes="data-entity-key:key"
+                      onclick="AppActions.pacienteFull(this.getAttribute('data-entity-key'))"
+                      ></button>
+                  </template>
                 </td>
                 <td data-entity-field="telefone" class="telefone"></td>
                 <td data-entity-field="email" class="email"></td>

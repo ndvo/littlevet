@@ -40,7 +40,7 @@ function start () {
     Entity.forEachInCollection('client',
       function (client) {
         const c = client.value
-        Entity.referenceToNesting(c, function complete(evt) {
+        Entity.referenceToNesting(c, function complete (evt) {
           Stamp('#card-client', { override: true })
             .change(el => {
               Entity.applyElement(c, el)
@@ -99,7 +99,6 @@ function start () {
   window.AppActions.saveClient = function (e) {
     try {
       const data = new FormData(e.target)
-      const client = {}
       const entity = Entity.toEntity(data, 'client')
       Entity.storeAll(Entity.referencify(entity))
     } catch (e) {
@@ -108,10 +107,28 @@ function start () {
     return false
   }
 
-  window.quick.semAlteracao = function(e) {
-    e.parentElement.querySelector('input[type=text]').value='Sem alteração';
+  window.AppActions.pacienteFull = function (key) {
+    console.debug(key)
+    Server.db
+      .transaction('patient')
+      .objectStore('patient')
+      .get(key)
+      .onsuccess = function (evt) {
+        console.debug(evt)
+        const entity = evt.target.result
+        Entity.referenceToNesting(entity,
+          function complete (evt) {
+            Stamp('#prontuario')
+              .target('#application')
+              .clearAll()
+          }
+        )
+      }
   }
 
+  window.quick.semAlteracao = function (e) {
+    e.parentElement.querySelector('input[type=text]').value = 'Sem alteração'
+  }
 }
 
 function incrementCount (o) {

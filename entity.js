@@ -80,11 +80,25 @@ const Entity = {
           }
           this.applyElement(value, el)
         }
+        const elAttrs = element.querySelectorAll('[data-entity-attributes]')
+        for (const el of elAttrs) {
+          const attrs = el.getAttribute('data-entity-attributes').split(',')
+          for (const att of attrs) {
+            const keyValue = att.split(':')
+            console.debug(keyValue, entity)
+            if (!el.getAttribute(keyValue[0])) {
+              el.setAttribute(keyValue[0], entity[keyValue[1]])
+            }
+          }
+        }
       } else {
-        if (entity && element.hasAttribute('data-entity-field'))
-          element.textContent = entity
-        else 
-          element.querySelector('[data-entity-field]').textContent = entity
+        let el
+        if (entity && element.hasAttribute('data-entity-field')) {
+          el = element
+        } else {
+          el = element.querySelector('[data-entity-field]')
+        }
+        el.textContent = entity
       }
     }
   },
