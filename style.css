@@ -31,7 +31,23 @@
   --space20: calc( var(--space19) * 1.6 );
   --menu-width:  var(--space12) ;
   --float1: var(--space2) var(--space2) var(--space4);
+  --icon-plus: '✚';
+  --icon-cancel: '✖';
+  --icon-edit: '✎';
+  --icon-cat: '🐱';
+  --icon-warn: '⚠';
+  --icon-play: '▶';
+  --icon-check: '✔';
+  --icon-delete: '⊘';
+  --icon-favourite: '☆';
+  --icon-favourite-filled: '★';
+  --icon-phone: '☎';
+  --icon-flag: '⚐';
+  --icon-flag-filled: '⚑';
+     
 }
+
+
 
 /* Typography */
 body {
@@ -226,3 +242,27 @@ td {
   padding: var(--space5);
 }
 
+.add:before{
+  content: var(--icon-plus);
+}
+.cancel:before{
+  content: var(--icon-cancel);
+}
+.edit:before{
+  content: var(--icon-edit);
+}
+.cat:before{
+  content: var(--icon-cat);
+}
+.warn:before{
+  content: var(--icon-warn);
+}
+.play:before{
+  content: var(--icon-play);
+}
+.ok:before{
+  content: var(--icon-check);
+}
+.delete:before {
+  content: var(--icon-delete);
+}
