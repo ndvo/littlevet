@@ -30,6 +30,7 @@ function start () {
   let previousForm
 
   window.AppActions || (window.AppActions = {})
+  window.quick || (window.quick = {})
 
   window.AppActions.listClient = function () {
     Stamp('#list-client')
@@ -39,14 +40,10 @@ function start () {
     Entity.forEachInCollection('client',
       function (client) {
         const c = client.value
-        Entity.referenceToNesting(c, (evt) => {
-          console.debug(c)
+        Entity.referenceToNesting(c, function complete(evt) {
           Stamp('#card-client', { override: true })
             .change(el => {
-              el.querySelector('.nome').innerText = c.nome
-              el.querySelector('.telefone').innerText = c.telefone
-              el.querySelector('.email').innerText = c.email
-              el.querySelector('.pacientes').innerText = c.patient.map(p => p.nome).join(',')
+              Entity.applyElement(c, el)
             })
             .stamp()
         })
@@ -110,6 +107,11 @@ function start () {
     }
     return false
   }
+
+  window.quick.semAlteracao = function(e) {
+    e.parentElement.querySelector('input[type=text]').value='Sem alteração';
+  }
+
 }
 
 function incrementCount (o) {
