@@ -92,44 +92,44 @@
           </button>
           <template id="form-paciente">
             <fieldset>
-              <input type="hidden" name="client-patient--key">
+              <input type="hidden" name="client-paciente--key">
               <div id="field-nome" class="field">
                 <label >Nome</label>
-                <input name="client-patient--nome" type="text">
+                <input name="client-paciente--nome" type="text">
               </div>
               <div id="field-genero" class="field">
                 <label>Gênero</label>
-                <input type="radio" name="client-patient--genero" value="masculino">Masculino
-                <input type="radio" name="client-patient--genero" value="feminino">Feminino
+                <input type="radio" name="client-paciente--genero" value="masculino">Masculino
+                <input type="radio" name="client-paciente--genero" value="feminino">Feminino
               </div>
               <div id="field-especie" class="field">
                 <label>Espécie</label>
                   <input type="radio"
-                    name="client-patient--especie"
+                    name="client-paciente--especie"
                     id="paciente-especie-canino-"
                     value="canino">
                   <label for="paciente-especie-canino-">🐶 Canino</label>
                   <input type="radio"
-                    name="client-patient--especie"
+                    name="client-paciente--especie"
                     id="paciente-especie-felino-"
                     value="felino">
                   <label for="paciente-especie--felino">😹 Felino</label>
               </div>
               <div id="field-nascimento" class="field">
                 <label>Nascimento</label>
-                <input name="client-patient--nascimento" type="date">
+                <input name="client-paciente--nascimento" type="date">
               </div>
               <div id="field-raca" class="field">
                 <label>Raça</label>
-                <input name="client-patient--raca" type="text">
+                <input name="client-paciente--raca" type="text">
               </div>
               <div id="field-pelagem" class="field">
                 <label>Pelagem</label>
-                <input name="client-patient--pelagem" type="text">
+                <input name="client-paciente--pelagem" type="text">
               </div>
               <div id="field-situacao-falecido">
                 <label for="paciente-falecido-">Falecido</label>
-                <input name="client-patient--falecido" id="paciente--falecido" type="checkbox" >
+                <input name="paciente--falecido" id="paciente--falecido" type="checkbox" >
               </div>
             </fieldset>
           </template>
@@ -153,17 +153,224 @@
             </thead>
             <tbody>
           <template id="card-client">
-              <tr>
-                <td class="nome"></td>
-                <td class="pacientes"></td>
-                <td class="telefone"></td>
-                <td class="email"></td>
-                <td class="acoes"></td>
+              <tr data-entity="client">
+                <td data-entity-field="nome" class="nome"></td>
+                <td data-entity-field="patient" class="pacientes">
+                  <template><button data-entity-field="nome"></button></template>
+                </td>
+                <td data-entity-field="telefone" class="telefone"></td>
+                <td data-entity-field="email" class="email"></td>
+                <td class="actions">
+                  <button title="editar" class="edit" action=""></button>
+                  <button title="apagar" class="delete" action=""></button>
+                </td>
               </tr>
           </template>
             </tbody>
           </table>
         </section>
+      </template>
+
+      <template id="prontuario">
+        <article data-entity="patient" id="paciente">
+          <header>
+            <aside class="tutor">
+              <h1 data-entity-field="client-nome"></h1>
+              <div data-entity-field="client-telefone"></div>
+            </aside>
+            <section class="patient">
+              <h1 data-entity-field="nome"></h1>
+              <div class="basic-info">
+                <span data-entity-field="raca"></span>
+                <span data-entity-field="pelagem"></span>
+                <span data-entity-field="genero"></span>
+                <span data-entity-field="castrado"></span>
+                <span data-entity-field="peso"></span>
+                <span data-entity-field="idade"></span>
+                <img data-entity-field="foto">
+              </div>
+            </section>
+            <section class="actions">
+              <button class="add">Atendimento</button>
+              <button class="add">Retorno</button>
+            </section>
+          </header>
+          <section class="painel">
+            <section class="historico">
+
+              <template id="tpl-historico">
+                <button class="history-entry">
+                  <span data-entity-field="date"></span>
+                  <span data-entity-field="nome"></span>
+                  <span data-entity-field="valor"></span>
+                </button>
+              </template>
+
+            </section>
+            <section id="conteudo">
+
+              <template id="tpl-atendimento">
+                <form class="atendimento">
+
+                  <fieldset>
+                    <legend>Anamnese</legend>
+                    <div class="field">
+                      <label for="atendimento-anamnese">Anamnese</label>
+                      <textarea name="atendimento-anamnese" id="atendimento-anamnese"></textarea>
+                    </div>
+                    <div class="field">
+                      <label >Ambiente</label>
+                      <input id="atendimento-ambiente"
+                             name="atendimento-ambiente"/>
+                    </div>
+                    <div class="field">
+                      <label >Alimentação</label>
+                      <input id="atendimento-alimentacao"
+                             name="atendimento-alimentacao" />
+                    </div>
+                    <div class="field">
+                      <label >Vacinação</label>
+                      <input id="atendimento-vacinacao"
+                             name="atendimento-vacinacao" />
+                    </div>
+                    <div class="field">
+                      <label >Vermifugação</label>
+                      <input id="atendimento-vermifugacao"
+                             name="atendimento-vermifugacao" />
+                    </div>
+                    <div class="field">
+                      <label >Ectoparasitas</label>
+                      <input id="atendimento-ectoparasitas"
+                             name="atendimento-ectoparasitas" />
+                    </div>
+                    <div class="field">
+                      <label >Histórico de Reprodução</label>
+                      <textarea id="atendimento-reproducao"
+                                name="atendimento-reproducao" ></textarea>
+                    </div>
+                    <div class="field">
+                      <label >História médica anterior</label>
+                      <textarea id="atendimento-historia"
+                                name="atendimento-historia" ></textarea>
+                    </div>
+                    <div class="field">
+                      <label >Procedimentos</label>
+                      <textarea id="atendimento-procedimentos"
+                                name="atendimento-procedimentos" ></textarea>
+                    </div>
+                  </fieldset>
+
+                  <fieldset>
+                    <legend>Exame Clínico</legend>
+                    <fieldset>
+                      <legend>Sistema Cardiovascular</legend>
+                      <label>FC (bpm)</label> <input name="atendimento-fc">
+                      <label>FR (mpm)</label> <input name="atendimento-fr">
+                      <label>PS</label> <input name="atendimento-ps">
+                      <label>PD</label> <input name="atendimento-pd">
+                      <div class="field">
+                        <label>Tempo de preenchimento capilar (seg)</label>
+                        <input name="atendimento-tempopreenchimento">
+                      </div>
+                      <div class="field">
+                        <label>Pulso venoso jugular</label>
+                        <button class="ok" onclick="quick.semAlteracao"></button>
+                        <input name="atendimento-pulso_venoso_jugular">
+                      </div>
+
+                      <div class="field">
+                        <label>Pulso arterial</label>
+                        <button class="ok" onclick="quick.semAlteracao"></button>
+                        <input name="atendimento.pulso_arterial">
+                      </div>
+                      <div class="field">
+                        <label>Observações</label>
+                        <textarea name="atendimento-cardiovascular">
+                        </textarea>
+                      </div>
+                    </fieldset>
+
+                    <div class="field">
+                      <label>Temperatura</label>
+                      <input  name="atendimento-temperatura" type="number">
+                    </div>
+
+
+                    <div class="field">
+                      <label>Olhos e mucosa ocular</label>
+                      <button class="ok" onclick="quick.semAlteracao"></button>
+                      <input name="atendimento-olhos">
+                    </div>
+
+                    <div class="field">
+                      <label>Cavidade oral</label>
+                      <button class="ok" onclick="quick.semAlteracao"></button>
+                      <input name="atendimento-cavidade_oral">
+                    </div>
+
+                    <div class="field">
+                      <label>Hidratação</label>
+                      <button class="ok" onclick="quick.semAlteracao"></button>
+                      <input name="atendimento-hidratacao">
+                    </div>
+
+
+                    <div class="field">
+                      <label>Orelhas/ouvido</label>
+                      <button class="ok" onclick="quick.semAlteracao"></button>
+                      <input name="atendimento-orelas_ouvido">
+                    </div>
+
+                    <div class="field">
+                      <label>Linfonodos</label>
+                      <button class="ok" onclick="quick.semAlteracao"></button>
+                      <input name="atendimento-linfonodos">
+                    </div>
+
+                    <div class="field">
+                      <label>Pele/Pêlo</label>
+                      <button class="ok" onclick="quick.semAlteracao"></button>
+                      <input name="atendimento-pele_pelo">
+                    </div>
+
+                    <div class="field">
+                      <label>Abdomen</label>
+                      <button class="ok" onclick="quick.semAlteracao"></button>
+                      <input name="atendimento-abdomen">
+                    </div>
+
+                    <div class="field">
+                      <label>Borborigmo</label>
+                      <button class="ok" onclick="quick.semAlteracao"></button>
+                      <input name="atendimento-borborigmo">
+                    </div>
+
+                    <div class="field">
+                      <label>Urinário</label>
+                      <button class="ok" onclick="quick.semAlteracao"></button>
+                      <input name="atendimento-urinario">
+                    </div>
+
+                    <div class="field">
+                      <label>Genital</label>
+                      <button class="ok" onclick="quick.semAlteracao"></button>
+                      <input name="atendimento-genital">
+                    </div>
+
+                    <div class="field">
+                      <label>Nervoso</label>
+                      <button class="ok" onclick="quick.semAlteracao"></button>
+                      <input name="atendimento-nervoso">
+                    </div>
+
+                  </fieldset>
+
+                </form>
+              </template>
+
+            </section>
+          </section>
+
       </template>
 
     </section>

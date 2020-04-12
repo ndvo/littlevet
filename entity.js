@@ -24,7 +24,6 @@ const Entity = {
     let entries
     if (data instanceof FormData) {
       entries = []
-      console.debug('aqui')
       for (const e of data.entries()) {
         const attr = this.nameToAttributes(this.fixName(e[0]))
         attr.value = e[1]
@@ -39,7 +38,6 @@ const Entity = {
     }
     const fields = {}
     if (entity) fields.entity = entity
-    console.debug(entries)
     for (const e of entries) {
       let ctx = fields
       if (!e.parent) {
@@ -61,8 +59,34 @@ const Entity = {
       }
     }
     if (fields.id === '') delete fields.id
-    console.debug(fields)
     return this.keyfyRecursive(fields)
+  },
+
+  applyElement (entity, element) {
+    if (entity) {
+      if (Array.isArray(entity)) {
+        const tpl = element.querySelector('template').content
+        for (const i of entity) {
+          const clone = tpl.cloneNode(true)
+          this.applyElement(i, clone)
+          element.append(clone)
+        }
+      } else if (typeof entity === 'object') {
+        for (const el of element.querySelectorAll('[data-entity-field]')) {
+          const field = el.getAttribute('data-entity-field').split('-')
+          let value = entity
+          for (const f of field) {
+            value = value[f]
+          }
+          this.applyElement(value, el)
+        }
+      } else {
+        if (entity && element.hasAttribute('data-entity-field'))
+          element.textContent = entity
+        else 
+          element.querySelector('[data-entity-field]').textContent = entity
+      }
+    }
   },
 
   aggregateFields (fields) {
@@ -149,7 +173,6 @@ const Entity = {
    */
   keyfyRecursive (entity) {
     this.keyGen(entity)
-    console.debug(entity)
     for (const entry of Object.entries(entity)) {
       if (!entry[1]) continue
       if (Server.db.objectStoreNames.contains(entry[0])) {
@@ -177,7 +200,6 @@ const Entity = {
    *
    */
   referencify (entity, entities = null) {
-    console.debug(entity)
     if (!entities) entities = [entity]
     else entities.push(entity)
     for (const entry of Object.entries(entity)) {
@@ -196,7 +218,6 @@ const Entity = {
         }
       }
     }
-    console.debug(entities)
     return entities
   },
 
@@ -238,7 +259,7 @@ const Entity = {
         const store = transaction.objectStore(entity.entity)
         const req = store.put(entity)
         req.onsuccess = console.log
-        req.onerror = console.debug
+        req.onerror = console.error
       }
       transaction.oncomplete = resolve
       transaction.onerror = reject
