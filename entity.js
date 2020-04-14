@@ -89,7 +89,7 @@ const Entity = {
           const field = el.getAttribute('data-entity-field').split('-')
           let value = entity
           for (const f of field) {
-            value = value[f]
+            if (value) value = value[f]
           }
           this.applyElement(value, el)
         }
