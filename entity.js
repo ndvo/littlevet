@@ -62,6 +62,19 @@ const Entity = {
     return this.keyfyRecursive(fields)
   },
 
+  /**
+   * Fills an element with values from entity
+   *
+   * If entity is a scalar, textContent of element with [data-entity-field] is
+   * set to entity.
+   *
+   * If entity is an array, the first template child of element is appended for
+   * each element of the array, recursivelly applying the entity
+   *
+   * If entity is an object, data-entity-field receives the values from object,
+   * nestedly and recursively
+   *
+   */
   applyElement (entity, element) {
     if (entity) {
       if (Array.isArray(entity)) {
