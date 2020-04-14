@@ -108,21 +108,18 @@ function start () {
   }
 
   window.AppActions.pacienteFull = function (key) {
-    console.debug(key)
     Server.db
       .transaction('patient')
       .objectStore('patient')
       .get(key)
       .onsuccess = function (evt) {
-        console.debug(evt)
         const entity = evt.target.result
-        Entity.referenceToNesting(entity,
-          function complete (evt) {
-            Stamp('#prontuario')
-              .target('#application')
-              .clearAll()
-          }
-        )
+        console.debug(entity)
+        Stamp('#prontuario')
+          .target('#application')
+          .clearAll()
+          .change( e => Entity.applyElement(entity, e))
+          .stamp()
       }
   }
 
