@@ -102,7 +102,7 @@ function start () {
       const entity = Entity.toEntity(data, 'client')
       Entity.storeAll(Entity.referencify(entity))
     } catch (e) {
-      console.error(e.message)
+      console.error(e)
     }
     return false
   }
