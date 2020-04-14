@@ -62,14 +62,14 @@ function start () {
         element.setAttribute('id', formId)
       })
       .stamp()
-    Stamp('#form-pacientes')
+    Stamp('#form-patients')
       .target('#' + formId + ' form')
       .change(function (element) {
         element.setAttribute('id', element.getAttribute('id') + this.count)
       })
       .clear()
       .stamp()
-    Stamp('#form-paciente', { override: true })
+    Stamp('#form-patient', { override: true })
       .change(function (element) {
         incrementCount(this)
         uniquefy(element, this.count)
