@@ -199,26 +199,29 @@ const Entity = {
    * Changes in place and returns the entity for convenience
    */
   keyfyRecursive (entity) {
+    console.debug(entity)
     this.keyGen(entity)
     for (const entry of Object.entries(entity)) {
-      if (!entry[1]) continue
+      if (!entry[1] || typeof entry[1] != 'object') continue
       if (Server.db.objectStoreNames.contains(entry[0])) {
         if (Array.isArray(entry[1])) {
           for (const e of entry[1]) {
             if (!e) continue
+            console.debug(e)
             if (!e.entity) e.entity = entry[0]
             this.keyGen(e)
-            e['related-' + entity.entity] = entity.key
+            e[entity.entity] = entity.key
             this.keyfyRecursive(e)
           }
         } else {
           if (!entry[1].entity) { entry[1].entity = entry[0] }
           this.keyGen(entity[entry[0]])
-          entity[entry[0]]['related-' + entity.entity] = entity.key
+          entity[entry[0]][entity.entity] = entity.key
           this.keyfyRecursive(entity[entry[0]])
         }
       }
     }
+    console.debug(entity)
     return entity
   },
 
