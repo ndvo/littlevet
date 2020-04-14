@@ -46,9 +46,7 @@ function getById (collection, id, success, error = console.error) {
 }
 
 function setLocal (collection, objectToStore) {
-  console.debug("let's store")
   const transaction = Server.db.transaction([collection], 'readwrite')
-  console.debug(transaction)
   transaction.oncomplete = function (event) {
     console.debug('Transaction complete', event)
   }

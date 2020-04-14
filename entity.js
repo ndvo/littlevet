@@ -98,7 +98,6 @@ const Entity = {
           const attrs = el.getAttribute('data-entity-attributes').split(',')
           for (const att of attrs) {
             const keyValue = att.split(':')
-            console.debug(keyValue, entity)
             if (!el.getAttribute(keyValue[0])) {
               el.setAttribute(keyValue[0], entity[keyValue[1]])
             }
