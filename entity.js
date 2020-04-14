@@ -231,18 +231,21 @@ const Entity = {
   referencify (entity, entities = null) {
     if (!entities) entities = [entity]
     else entities.push(entity)
+    const entityNames = Server.db.objectStoreNames
     for (const entry of Object.entries(entity)) {
-      if (Server.db.objectStoreNames.contains(entry[0])) {
+      if (entityNames.contains(entry[0])) {
         if (Array.isArray(entry[1])) {
           const idArray = []
           entity[entry[0]] = idArray
           for (const item of entry[1]) {
             if (!item) continue
             idArray.push(item.key)
+            if (!item.entity) item.entity = entry[0]
             this.referencify(item, entities)
           }
-        } else {
+        } else if (typeof entry[1] == 'object'){
           entity[entry[0]] = entry[1].key
+          if (!entry[1].entity) entry[1].entity = entry[0]
           this.referencify(entry[1], entities)
         }
       }
