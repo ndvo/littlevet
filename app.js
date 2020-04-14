@@ -118,7 +118,7 @@ function start () {
         Stamp('#prontuario')
           .target('#application')
           .clearAll()
-          .change( e => Entity.applyElement(entity, e))
+          .change(e => Entity.applyElement(entity, e))
           .stamp()
       }
   }
