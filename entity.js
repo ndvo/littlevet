@@ -282,11 +282,16 @@ const Entity = {
     return entities
   },
 
+  /**
+   * Loads one level of nested entities from db
+   */
   referenceToNesting (entity, complete, error = console.error) {
+    const stores = Server.db.objectStoreNames
+    const keys = Object.keys(entity)
+    const transaction = Server.db.transaction(keys.filter(e => stores.contains(e)))
     for (const entry of Object.entries(entity)) {
-      if (Server.db.objectStoreNames.contains(entry[0])) {
+      if (stores.contains(entry[0])) {
         const collection = entry[0]
-        const transaction = Server.db.transaction(collection)
         const store = transaction.objectStore(collection)
         if (Array.isArray(entry[1])) {
           for (let i = 0; i < entry[1].length; i++) {
@@ -297,9 +302,9 @@ const Entity = {
           store.get(entry[1])
             .onsuccess = r => { entity[entry[0]] = r.target.result }
         }
-        transaction.oncomplete = complete
       }
     }
+    transaction.oncomplete = complete
   },
 
   /**
