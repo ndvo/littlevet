@@ -20,7 +20,7 @@ const Entity = {
     return key
   },
 
-  toEntity (data, entity = null) {
+  dataToEntries (data) {
     let entries
     if (data instanceof FormData) {
       entries = []
@@ -36,7 +36,18 @@ const Entity = {
     } else {
       entries = Object.entries(data)
     }
+    return entries
+  },
+
+  /**
+   * Converts data into a standardized entity
+   *
+   * Data may be a FormData, a IDBCursorWithValue or an Object.
+   */
+  toEntity (data, entity = null) {
     const fields = {}
+    // Convert possible data inputs to entries
+    const entries = this.dataToEntries(data)
     // Every entity should have an entity field
     if (entity) fields.entity = entity
     for (const e of entries) {
@@ -170,7 +181,7 @@ const Entity = {
   validName (name) {
     const splited = name.split('-')
     if (splited.length % 2) { return false }
-    for (const i = 0; i++; i < splited.length) {
+    for (let i = 0; i++; i < splited.length) {
       if (i % 2 && !this.isNumeric(splited[i])) { return false }
     }
     return true
