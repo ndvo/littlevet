@@ -192,6 +192,10 @@ legend {
 label {
   min-width: var(--space11);
   display: inline-block;
+  white-space: nowrap;
+}
+label input {
+  margin-right: 2ch;
 }
 
 .field {
@@ -211,7 +215,7 @@ input[type=text], input[type=email] {
   min-width: var(--space14);
 }
 textarea {
-  width: 100%;
+  width: calc(100% - calc(2*var(--space6)));
   height: var(--space11);
 }
 select {
@@ -265,4 +269,54 @@ td {
 }
 .delete:before {
   content: var(--icon-delete);
+}
+/**
+ * Loading indicator
+ */
+[data-loading]:after {
+  content: "🕜";
+  z-index: 1;
+  position: absolute;
+  font-size: var(--space7);
+  padding: var(--space3);
+  border: var(--space1) var(--color-theme-dark) solid;
+  box-shadow: var(--space4) var(--space4) var(--space6) var(--color-theme-darker);
+  animation-duration: 2s;
+  animation-name: fadeIn;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--color-theme-lighter);
+  height: var(--space8);
+  width: var(--space8);
+  border-radius: var(--space8);
+  margin-right: 0;
+}
+[data-loading]:first-child:before {
+  content: "🕜";
+  position: fixed;
+  font-size: var(--space9);
+  top: var(--space8);
+  right: var(--space8);
+  padding: var(--space3);
+  border: var(--space1) var(--color-theme-dark) solid;
+  box-shadow: var(--space4) var(--space4) var(--space6) var(--color-theme-darker);
+  animation-duration: 2s;
+  animation-name: fadeIn;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--color-theme-lighter);
+  height: var(--space10);
+  width: var(--space10);
+  border-radius: var(--space6);
+  margin-right: 0;
+}
+@keyframes fadeIn {
+  from {
+    margin-right: -100px;
+  }
+  to {
+    margin-right: 0;
+  }
 }

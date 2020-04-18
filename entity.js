@@ -59,6 +59,7 @@ const Entity = {
       }
     }
     if (fields.id === '') delete fields.id
+    console.debug(fields)
     return this.keyfyRecursive(fields)
   },
 
@@ -68,6 +69,9 @@ const Entity = {
    * If entity is a scalar, textContent of element with [data-entity-field] is
    * set to entity.
    *
+   * Ignores the first item of the data-entity-field if it is equal to the
+   * entity attribute of the entity.
+   *
    * If entity is an array, the first template child of element is appended for
    * each element of the array, recursivelly applying the entity
    *
@@ -76,6 +80,7 @@ const Entity = {
    *
    */
   applyElement (entity, element) {
+    console.debug(entity, element)
     if (entity) {
       if (Array.isArray(entity)) {
         const tpl = element.querySelector('template').content
@@ -86,7 +91,15 @@ const Entity = {
         }
       } else if (typeof entity === 'object') {
         for (const el of element.querySelectorAll('[data-entity-field]')) {
-          const field = el.getAttribute('data-entity-field').split('-')
+          let fieldRaw = el.getAttribute('data-entity-field')
+          if (!fieldRaw) fieldRaw = el.getAttribute('name')
+          const field = fieldRaw.split('-')
+
+          // ignora o primeiro elemento se for igual ao nome da entidade
+          if (field[0] == entity.entity) {
+            field.shift() 
+          }
+
           let value = entity
           for (const f of field) {
             if (value) value = value[f]
@@ -110,8 +123,16 @@ const Entity = {
         } else {
           el = element.querySelector('[data-entity-field]')
         }
-        el.textContent = entity
+        this.setElementRelevantValue(el, entity)
       }
+    }
+  },
+
+  setElementRelevantValue (el, value) {
+    if (['INPUT', 'SELECT'].includes(el.tagName)) {
+      el.value = value
+    } else {
+      el.textContent = value
     }
   },
 
@@ -279,6 +300,7 @@ const Entity = {
    * [entity, entity, entity ...]
    */
   storeAll (entities, resolve, reject) {
+    console.debug(entities)
     return new Promise((resolve, reject) => {
       const transaction = Server.db.transaction(
         Array.from(Server.db.objectStoreNames), 'readwrite'

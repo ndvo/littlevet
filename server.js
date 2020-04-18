@@ -36,7 +36,7 @@ Server.templates.get = function get (tpl) {
   })
 }
 
-function getById (collection, id, success, error = console.error) {
+Server.getById = function (collection, id, success, error = console.error) {
   const request = Server.db
     .transaction(collection)
     .objectStore(collection)
