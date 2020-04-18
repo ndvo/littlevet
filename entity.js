@@ -37,6 +37,7 @@ const Entity = {
       entries = Object.entries(data)
     }
     const fields = {}
+    // Every entity should have an entity field
     if (entity) fields.entity = entity
     for (const e of entries) {
       let ctx = fields
@@ -59,7 +60,7 @@ const Entity = {
       }
     }
     if (fields.id === '') delete fields.id
-    console.debug(fields)
+    if (!fields.entity) console.error(fields, 'entity does not have an entity field and no entity was informed')
     return this.keyfyRecursive(fields)
   },
 
@@ -80,7 +81,6 @@ const Entity = {
    *
    */
   applyElement (entity, element) {
-    console.debug(entity, element)
     if (entity) {
       if (Array.isArray(entity)) {
         const tpl = element.querySelector('template').content
@@ -219,7 +219,6 @@ const Entity = {
    * Changes in place and returns the entity for convenience
    */
   keyfyRecursive (entity) {
-    console.debug(entity)
     this.keyGen(entity)
     for (const entry of Object.entries(entity)) {
       if (!entry[1] || typeof entry[1] != 'object') continue
@@ -227,7 +226,6 @@ const Entity = {
         if (Array.isArray(entry[1])) {
           for (const e of entry[1]) {
             if (!e) continue
-            console.debug(e)
             if (!e.entity) e.entity = entry[0]
             this.keyGen(e)
             e[entity.entity] = entity.key
@@ -241,7 +239,6 @@ const Entity = {
         }
       }
     }
-    console.debug(entity)
     return entity
   },
 
@@ -300,7 +297,6 @@ const Entity = {
    * [entity, entity, entity ...]
    */
   storeAll (entities, resolve, reject) {
-    console.debug(entities)
     return new Promise((resolve, reject) => {
       const transaction = Server.db.transaction(
         Array.from(Server.db.objectStoreNames), 'readwrite'
