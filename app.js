@@ -114,7 +114,7 @@ function start () {
       .get(key)
       .onsuccess = function (evt) {
         const entity = evt.target.result
-        Entity.referenceToNesting(entity, function() {
+        Entity.referenceToNesting(entity, function () {
           console.debug(entity)
           Stamp('#prontuario')
             .target('#application')
@@ -165,31 +165,30 @@ function uniquefy (element, count) {
 }
 
 function stampFormClient () {
-    let formId
-    Stamp('#form-client')
-      .target('#application')
-      .clearAll()
-      .change(function (element) {
-        incrementCount(this)
-        formId = 'form-client' + this.count
-        element.setAttribute('id', formId)
-      })
-      .stamp()
-    Stamp('#form-patients')
-      .target('#' + formId + ' form')
-      .change(function (element) {
-        element.setAttribute('id', element.getAttribute('id') + this.count)
-      })
-      .clear()
-      .stamp()
-    Stamp('#form-patient', { override: true })
-      .change(function (element) {
-        incrementCount(this)
-        uniquefy(element, this.count)
-      })
-      .stamp()
+  let formId
+  Stamp('#form-client')
+    .target('#application')
+    .clearAll()
+    .change(function (element) {
+      incrementCount(this)
+      formId = 'form-client' + this.count
+      element.setAttribute('id', formId)
+    })
+    .stamp()
+  Stamp('#form-patients')
+    .target('#' + formId + ' form')
+    .change(function (element) {
+      element.setAttribute('id', element.getAttribute('id') + this.count)
+    })
+    .clear()
+    .stamp()
+  Stamp('#form-patient', { override: true })
+    .change(function (element) {
+      incrementCount(this)
+      uniquefy(element, this.count)
+    })
+    .stamp()
 }
-
 
 function prepareTemplates () {
   const templates = [

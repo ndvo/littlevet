@@ -332,16 +332,13 @@ td {
   justify-content: center;
   align-items: center;
   background: var(--color-theme-lighter);
-  height: var(--space10);
-  width: var(--space10);
-  border-radius: var(--space6);
+  height: var(--space8);
+  width: var(--space8);
+  border-radius: var(--space8);
   margin-right: 0;
 }
+
 @keyframes fadeIn {
-  from {
-    margin-right: -100px;
-  }
-  to {
-    margin-right: 0;
-  }
+  from { margin-right: -100px; }
+  to { margin-right: 0; }
 }
