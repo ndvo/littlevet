@@ -4,6 +4,9 @@ import Entity from './entity.js'
 import Tests from './test.js'
 
 setUp()
+const appEl = document.querySelector('#application')
+
+loading()
 
 function setUp () {
   Server.setUpDatabase()
@@ -33,6 +36,7 @@ function start () {
   window.quick || (window.quick = {})
 
   window.AppActions.listClient = function () {
+    loading()
     Stamp('#list-client')
       .target('#application')
       .clearAll()
@@ -48,7 +52,7 @@ function start () {
             .stamp()
         })
       }
-    )
+    ).then(lodingEnd)
   }
 
   window.AppActions.formClient = function (id) {
@@ -87,16 +91,19 @@ function start () {
 
   window.AppActions.saveClient = function (e) {
     try {
+      loading()
       const data = new FormData(e.target)
       const entity = Entity.toEntity(data, 'client')
       Entity.storeAll(Entity.referencify(entity))
     } catch (e) {
       console.error(e)
+      lodingEnd()
     }
     return false
   }
 
   window.AppActions.pacienteFull = function (key) {
+    loding()
     Server.db
       .transaction('patient')
       .objectStore('patient')
@@ -110,6 +117,7 @@ function start () {
             .clearAll()
             .change(e => Entity.applyElement(entity, e))
             .stamp()
+          lodingEnd()
         })
       }
   }
@@ -118,6 +126,17 @@ function start () {
     console.debug(e)
     e.parentElement.querySelector('input[type=text]').value = 'Sem alteração'
   }
+
+  lodingEnd()
+}
+
+function loading(){
+  console.debug('loading')
+  appEl.classList.add('loading')
+}
+
+function lodingEnd() {
+  appEl.classList.remove('loading')
 }
 
 function incrementCount (o) {
