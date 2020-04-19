@@ -90,7 +90,15 @@ function start () {
       loading()
       const data = new FormData(e.target)
       const entity = Entity.toEntity(data, 'client')
-      Entity.storeAll(Entity.referencify(entity))
+      Entity.storeAll( Entity.referencify(entity))
+        .then(() => {
+          stampMessage('Cliente salvo com sucesso', 'sucesso')
+          lodingEnd()
+        })
+        .catch(() => {
+          stampMessage('Ocorreu um erro ao salvar', 'erro')
+          lodingEnd()
+        })
     } catch (e) {
       console.error(e)
       lodingEnd()
@@ -119,8 +127,11 @@ function start () {
   }
 
   window.quick.semAlteracao = function (e) {
-    console.debug(e)
     e.parentElement.querySelector('input[type=text]').value = 'Sem alteração'
+  }
+
+  window.quick.bye = function (e) {
+    e.parentElement.removeChild(e)
   }
 
   lodingEnd()
@@ -193,4 +204,18 @@ function prepareTemplates () {
         }
       )
   }
+}
+
+/**
+ * return a function that adds a temporary message to the site
+ */
+function stampMessage (message, className) {
+  console.debug('mensagem', message, className);
+  Stamp('#tpl-message')
+    .change(el => {
+      el.classList.add(className)
+      el.textContent = message
+      setTimeout(() => el.parentElement.removeChild(el), 5000)
+    })
+    .stamp()
 }
