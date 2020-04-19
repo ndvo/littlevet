@@ -209,19 +209,22 @@ const Entity = {
     }
   },
 
-  forEachInCollection (collection, action) {
-    Server.db.transaction(collection)
-      .objectStore(collection)
-      .openCursor()
-      .onsuccess = function (event) {
+  forEachInCollection (collection, actionEach) {
+    return new Promise((resolve, reject) => {
+      const transaction = Server.db.transaction(collection)
+      const store = transaction.objectStore(collection)
+      const openCursor = store.openCursor()
+      openCursor.onsuccess = function (event) {
         const cursor = event.target.result
         if (cursor) {
-          action(cursor)
+          actionEach(cursor)
           cursor.continue()
         } else {
-          console.log('complete')
+          resolve()
         }
       }
+      openCursor.onerror = reject
+    })
   },
 
   /**
