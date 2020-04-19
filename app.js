@@ -79,10 +79,6 @@ function start () {
       .stamp()
   }
 
-  window.nome = function () {
-    return 'bode'
-  }
-
   window.AppActions.stamp = function (id) {
     Stamp(id, { override: true })
       .clear()
