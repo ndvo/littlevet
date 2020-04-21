@@ -143,6 +143,12 @@ nav ul li a {
 }
 
 /* UI */
+input[type=checkbox],
+input[type=radio] {
+  min-height: var(--space8);
+  min-width: var(--space8);
+  vertical-align: middle;
+}
 button {
   border: var(--space1) var(--color-theme-dark) solid;
   border-radius: var(--space6);

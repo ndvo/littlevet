@@ -74,7 +74,7 @@
                 <template>
                   <tr>
                     <td data-entity-field="name"></td>
-                    <td data-entity-field="client-name"></td>
+                    <td data-entity-field="client-nome"></td>
                     <td>
                       <span data-entity-field="client-email"></span>
                       <span data-entity-field="client-telefone"></span>
@@ -132,9 +132,7 @@
               <h1> Adicionar responsável</h1>
               <div class="actions">
                 <button class="action-abort" type="button">Cancelar</button>
-                <button class="action-save"
-                     type="submit"
-                     >Salvar</button>
+                <button class="action-save" type="submit">Salvar</button>
               </div>
             </header>
             <fieldset>
@@ -167,16 +165,20 @@
               <legend>Contato</legend>
               <div class="field">
                 <label>Email</label>
-                <input type="email" name="client-email" placeholder="emaildocliente@email.com">
+                <input  data-entity-field
+                   type="email" name="client-email" placeholder="emaildocliente@email.com">
               </div>
               <div class="field">
                 <label>Telefone</label>
-                <input type="text" name="client-telefone" placeholder="(55) 5555-555555">
-                whatsapp? <input name="client-whatsapp" type="checkbox">
+                <input  data-entity-field
+                  type="text" name="client-telefone" placeholder="(55) 5555-555555">
+                <label >whatsapp?
+                <input id="client-whatsapp" data-entity-field name="client-whatsapp" type="checkbox">
+                </label>
               </div>
               <div class="field">
                 <label>Endereço</label>
-                <textarea name="client-endereco"></textarea>
+                <textarea data-entity-field name="client-endereco"></textarea>
               </div>
             </fieldset>
             <div class="form-actions">
@@ -195,34 +197,34 @@
             <fieldset>
               <input data-entity-field type="hidden" name="client-patient--key">
               <div id="field-nome" class="field">
-                <label >Nome</label>
+                <label>Nome</label>
                 <input data-entity-field name="client-patient--nome" type="text">
               </div>
               <div id="field-genero" class="field">
                 <label>Gênero</label>
-                <input data-entity-field 
-                   type="radio"
-                   name="client-patient--genero"
-                   value="masculino">Masculino
-               <input data-entity-field
-                   type="radio"
-                   name="client-patient--genero"
-                   value="feminino">Feminino
+                <input type="radio" 
+                  id="cliente-patient--genero-m"
+                  name="client-patient--genero"
+                  value="masculino"><label for="cliente-patient--genero-m">Masculino</label>
+                <input type="radio"
+                  id="cliente-patient--genero-f"
+                  name="client-patient--genero"
+                  value="feminino"><label for="cliente-patient--genero-f">Feminino</label>
               </div>
               <div id="field-especie" class="field">
                 <label>Espécie</label>
                 <input data-entity-field
                        type="radio"
                        name="client-patient--especie"
-                       id="patient-especie-canino-"
+                       id="client-patient--especie"
                        value="canino">
-                <label for="patient-especie-canino-">🐶 Canino</label>
+                <label for="client-patient--especie">🐶 Canino</label>
                 <input data-entity-field
                        type="radio"
                        name="client-patient--especie"
-                       id="patient-especie-felino-"
+                       id="client-patient-especie--felino"
                        value="felino">
-                <label for="patient-especie--felino">😹 Felino</label>
+                <label for="client-patient-especie--felino">😹 Felino</label>
               </div>
               <div id="field-nascimento" class="field">
                 <label>Nascimento</label>
@@ -311,7 +313,9 @@
               </div>
             </section>
             <section class="actions">
-              <button class="add" onclick="AppActions.stamp('#tpl-atendimento')">Atendimento</button>
+              <button class="add" onclick="AppActions.stamp('#tpl-atendimento')">
+                Atendimento 
+              </button>
               <button class="add" onclick="AppActions.stamp('#tpl-retorno')">Retorno</button>
             </section>
           </header>
