@@ -60,9 +60,17 @@ function start () {
     if (id) {
       Server.getById('client', id,
         (ev) => {
-          console.debug(ev.target.result)
+          const client = ev.target.result
+          console.debug(client)
+          for (let p = 0; p < client.patient.length; p++) {
+            Stamp('#tpl-paciente-form', { override: true })
+              .change(function (element) {
+                uniquefy(element, p)
+              })
+              .stamp()
+          }
           Entity.applyElement(
-            ev.target.result,
+            client,
             document.querySelector('#application .client form'))
         },
         console.debug
@@ -73,6 +81,7 @@ function start () {
   window.AppActions.formPatient = function () {
     Stamp('#tpl-paciente-form')
       .change(function (element) {
+        console.debug(element)
         incrementCount(this)
         uniquefy(element, this.count)
       })
@@ -91,7 +100,7 @@ function start () {
       loading()
       const data = new FormData(e.target)
       const entity = Entity.toEntity(data, 'client')
-      Entity.storeAll( Entity.referencify(entity))
+      Entity.storeAll(Entity.referencify(entity))
         .then(() => {
           stampMessage('Cliente salvo com sucesso', 'sucesso')
           loadingEnd()
@@ -148,7 +157,7 @@ function loadingEnd() {
 }
 
 function incrementCount (o) {
-  if (o.count) o.count += 1
+  if (typeof o.count == 'number') o.count += 1
   else o.count = 0
 }
 
@@ -182,12 +191,6 @@ function stampFormClient () {
       element.setAttribute('id', element.getAttribute('id') + this.count)
     })
     .clear()
-    .stamp()
-  Stamp('#tpl-paciente-form', { override: true })
-    .change(function (element) {
-      incrementCount(this)
-      uniquefy(element, this.count)
-    })
     .stamp()
 }
 
