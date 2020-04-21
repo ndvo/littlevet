@@ -342,3 +342,34 @@ td {
   from { margin-right: -100px; }
   to { margin-right: 0; }
 }
+
+/**
+ * Dashboard
+ */
+#dashboard>section {
+  border: var(--space1) solid var(--color-theme-darker);
+  padding: var(--space5);
+  margin: var(--space5);
+}
+#dashboard {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+#dashboard #data-visualization {
+  width: 100%;
+}
+
+/**
+ * Prontuário
+ */
+#paciente .painel {
+  border: solid var(--color-theme-darker) thin;
+  display: flex;
+  flex-grow: 1; 
+  flex-wrap: wrap;
+  justify-content: space-between;
+  justify-items: stretch;
+  margin-top: var(--space7);
+  padding: var(--space7);
+}

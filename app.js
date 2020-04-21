@@ -52,7 +52,7 @@ function start () {
             .stamp()
         })
       }
-    ).then(lodingEnd)
+    ).then(loadingEnd)
   }
 
   window.AppActions.formClient = function (id) {
@@ -80,8 +80,9 @@ function start () {
   }
 
   window.AppActions.stamp = function (id) {
+    console.debug('stamping')
     Stamp(id, { override: true })
-      .clear()
+      .clearAll()
       .stamp()
   }
 
@@ -93,21 +94,21 @@ function start () {
       Entity.storeAll( Entity.referencify(entity))
         .then(() => {
           stampMessage('Cliente salvo com sucesso', 'sucesso')
-          lodingEnd()
+          loadingEnd()
         })
         .catch(() => {
           stampMessage('Ocorreu um erro ao salvar', 'erro')
-          lodingEnd()
+          loadingEnd()
         })
     } catch (e) {
       console.error(e)
-      lodingEnd()
+      loadingEnd()
     }
     return false
   }
 
   window.AppActions.pacienteFull = function (key) {
-    loding()
+    loading()
     Server.db
       .transaction('patient')
       .objectStore('patient')
@@ -121,7 +122,7 @@ function start () {
             .clearAll()
             .change(e => Entity.applyElement(entity, e))
             .stamp()
-          lodingEnd()
+          loadingEnd()
         })
       }
   }
@@ -134,7 +135,7 @@ function start () {
     e.parentElement.removeChild(e)
   }
 
-  lodingEnd()
+  loadingEnd()
 }
 
 function loading(){
@@ -142,7 +143,7 @@ function loading(){
   appEl.classList.add('loading')
 }
 
-function lodingEnd() {
+function loadingEnd() {
   appEl.classList.remove('loading')
 }
 
