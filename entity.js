@@ -92,6 +92,7 @@ const Entity = {
    *
    */
   applyElement (entity, element) {
+    const pending = {}
     if (entity) {
       if (Array.isArray(entity)) {
         const tpl = element.querySelector('template').content
@@ -101,21 +102,60 @@ const Entity = {
           element.append(clone)
         }
       } else if (typeof entity === 'object') {
-        for (const el of element.querySelectorAll('[data-entity-field]')) {
+        const deFields = element.querySelectorAll('[data-entity-field]')
+        for (const el of deFields) {
+          let willLoad = false
           let fieldRaw = el.getAttribute('data-entity-field')
           if (!fieldRaw) fieldRaw = el.getAttribute('name')
           const field = fieldRaw.split('-')
 
           // ignora o primeiro elemento se for igual ao nome da entidade
           if (field[0] == entity.entity) {
-            field.shift() 
+            field.shift()
           }
 
+          let transaction
           let value = entity
-          for (const f of field) {
-            if (value) value = value[f]
+          for (let f = 0; f < field.length; f++) {
+            if (typeof value == 'string' && value.match(/^\d+:0.\d+$/)) {
+              if (Array.isArray(pending[value])) {
+                pending[value].push(() => this.applyElement(entity, el.parentElement))
+                willLoad = true
+              } else {
+                pending[value] = [() => this.applyElement(entity, el.parentElement)]
+                const collection = field[field.length-3]
+                if (collection) {
+                  transaction = Server.db.transaction(collection)
+                  Server.db.transaction(collection)
+                    .objectStore(collection)
+                    .get(value)
+                    .onsuccess = r => {
+                      // Get a reference to the parent of the target field
+                      // given the structure: child-position-field, we need to
+                      // go back to child to set the retrieved element from the
+                      // database.
+                      // So we start from the original entity and walk up until
+                      // 3 items less than f
+                      let valueValue = entity
+                      for (let ff = 0; ff <= f - 3; ff++) {
+                        valueValue = valueValue[field[ff]]
+                      }
+                      valueValue[field[f-2]][field[f-1]] = r.target.result
+                      for (const func of pending[value]) {
+                        func.call()
+                      }
+                      pending[value] = []
+                    }
+                  willLoad = true
+                }
+              }
+            } else {
+              if (value) {
+                value = value[field[f]]
+              }
+            }
           }
-          this.applyElement(value, el)
+          if (!willLoad) this.applyElement(value, el)
         }
         const elAttrs = element.querySelectorAll('[data-entity-attributes]')
         for (const el of elAttrs) {
@@ -140,10 +180,20 @@ const Entity = {
   },
 
   setElementRelevantValue (el, value) {
-    if (['INPUT', 'SELECT'].includes(el.tagName)) {
-      el.value = value
-    } else {
-      el.textContent = value
+    switch (el.tagName) {
+      case 'INPUT':
+        if ((el.type == 'checkbox' && value == 'on') || 
+        (el.type == 'radio' && el.value == value)) {
+          el.checked = true
+          break
+        } else {
+          // fall through
+        }
+      case 'SELECT':
+        el.value = value
+        break
+      default:
+        el.textContent = value
     }
   },
 

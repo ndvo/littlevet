@@ -149,7 +149,7 @@ function loadingEnd() {
 
 function incrementCount (o) {
   if (o.count) o.count += 1
-  else o.count = 1
+  else o.count = 0
 }
 
 function uniquefy (element, count) {
