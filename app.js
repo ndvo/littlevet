@@ -71,7 +71,7 @@ function start () {
   }
 
   window.AppActions.formPatient = function () {
-    Stamp('#form-paciente')
+    Stamp('#tpl-paciente-form')
       .change(function (element) {
         incrementCount(this)
         uniquefy(element, this.count)
@@ -176,14 +176,14 @@ function stampFormClient () {
       element.setAttribute('id', formId)
     })
     .stamp()
-  Stamp('#form-patients')
+  Stamp('#tpl-pacientes')
     .target('#' + formId + ' form')
     .change(function (element) {
       element.setAttribute('id', element.getAttribute('id') + this.count)
     })
     .clear()
     .stamp()
-  Stamp('#form-patient', { override: true })
+  Stamp('#tpl-paciente-form', { override: true })
     .change(function (element) {
       incrementCount(this)
       uniquefy(element, this.count)
