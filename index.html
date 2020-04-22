@@ -58,26 +58,29 @@
         </ul>
       </nav>
     </section>
-    <section id="application" >
+    <section id="aplicacao" >
 
       <template id="tpl-dashboard">
         <section id="dashboard">
-          <section id="last-patients">
+          <section id="ultimos-pacientes">
             <header><h1>Últimos pacientes</h1></header>
             <table>
               <thead>
                 <tr>
-                  <th>Nome</th><th>Cliente</th><th>Contato</th><th>Editar</th>
+                  <th>Nome</th>
+                  <th>Cliente</th>
+                  <th>Contato</th>
+                  <th>Editar</th>
                 </tr>
               </thead>
               <tbody>
                 <template>
                   <tr>
-                    <td data-entity-field="name"></td>
-                    <td data-entity-field="client-nome"></td>
+                    <td data-entity-field="nome"></td>
+                    <td data-entity-field="cliente-nome"></td>
                     <td>
-                      <span data-entity-field="client-email"></span>
-                      <span data-entity-field="client-telefone"></span>
+                      <span data-entity-field="cliente-email"></span>
+                      <span data-entity-field="cliente-telefone"></span>
                     </td>
                     <td>
                       <button data-entity-field="nome"
@@ -91,22 +94,28 @@
             </table>
           </section>
           <section id="agenda">
-            <header><h1>Agenda</h1></header>
+            <header>
+              <h1> Agenda </h1> 
+            </header>
             <table>
               <thead>
                 <tr>
-                  <th>Horário</th><th>Cliente</th><th>Paciente</th><th>Contato</th><th>Editar</th>
+                  <th>Horário</th>
+                  <th>Cliente</th>
+                  <th>Paciente</th>
+                  <th>Contato</th>
+                  <th>Editar</th>
                 </tr>
               </thead>
               <tbody>
                 <template>
                   <tr>
                     <td data-entity-field="horario"></td>
-                    <td data-entity-field="client-name"></td>
-                    <td data-entity-field="patient-name"></td>
+                    <td data-entity-field="cliente-nome"></td>
+                    <td data-entity-field="paciente-nome"></td>
                     <td>
-                      <span data-entity-field="client-email"></span>
-                      <span data-entity-field="client-telefone"></span>
+                      <span data-entity-field="cliente-email"></span>
+                      <span data-entity-field="cliente-telefone"></span>
                     </td>
                     <td>
                       <button data-entity-field="nome"
@@ -125,8 +134,8 @@
         </section>
       </template>
 
-      <template id="form-client">
-        <article class="form client">
+      <template id="tpl-cliente-form">
+        <article class="form cliente">
           <form onsubmit="return AppActions.saveClient(event)">
             <header class="action-header">
               <h1> Adicionar responsável</h1>
@@ -138,47 +147,47 @@
             <fieldset>
               <legend>Identificação</legend>
               <input data-entity-field
-                type="hidden" name="client-key">
-              <div id="field-nome-client" class="field">
+                type="hidden" name="cliente-key">
+              <div class="field nome-cliente">
                 <label for="field-nome-input">Nome</label>
                 <input data-entity-field
-                  name="client-nome" id="field-nome-input" type="text">
+                  name="cliente-nome" id="field-nome-input" type="text">
               </div>
-              <div id="field-cpf" class="field">
+              <div class="field cpf">
                 <label for="field-cpf-input">CPF</label>
                 <input data-entity-field="cpf"
-                  name="client-cpf" id="field-cpf-input" type="text">
+                  name="cliente-cpf" id="field-cpf-input" type="text">
               </div>
-              <div id="field-genero" class="field">
+              <div class="field genero">
                 <label>Gênero</label>
-                <input type="radio" 
+                <input data-entity-field type="radio" 
                   id="cliente-genero-m"
-                  name="client-genero"
+                  name="cliente-genero"
                   value="masculino"><label for="cliente-genero-m">Masculino</label>
-                <input type="radio"
+                <input data-entity-field type="radio"
                   id="cliente-genero-f"
-                  name="client-genero"
+                  name="cliente-genero"
                   value="feminino"><label for="cliente-genero-f">Feminino</label>
               </div>
             </fieldset>
-            <fieldset id="fieldset-contatos">
+            <fieldset class="contatos">
               <legend>Contato</legend>
               <div class="field">
                 <label>Email</label>
                 <input  data-entity-field
-                   type="email" name="client-email" placeholder="emaildocliente@email.com">
+                   type="email" name="cliente-email" placeholder="emaildocliente@email.com">
               </div>
               <div class="field">
                 <label>Telefone</label>
                 <input  data-entity-field
-                  type="text" name="client-telefone" placeholder="(55) 5555-555555">
+                  type="text" name="cliente-telefone" placeholder="(55) 5555-555555">
                 <label >whatsapp?
-                <input id="client-whatsapp" data-entity-field name="client-whatsapp" type="checkbox">
+                <input id="cliente-whatsapp" data-entity-field name="cliente-whatsapp" type="checkbox">
                 </label>
               </div>
               <div class="field">
                 <label>Endereço</label>
-                <textarea data-entity-field name="client-endereco"></textarea>
+                <textarea data-entity-field name="cliente-endereco"></textarea>
               </div>
             </fieldset>
             <div class="form-actions">
@@ -188,71 +197,71 @@
       </template>
 
       <template id="tpl-pacientes">
-        <fieldset class="form patient">
+        <fieldset class="form paciente">
           <legend> Adicionar pacientes </legend>
           <button onclick="AppActions.formPatient()" type="button">
             Novo Paciente
           </button>
           <template id="tpl-paciente-form">
             <fieldset>
-              <input data-entity-field type="hidden" name="client-patient--key">
-              <div id="field-nome" class="field">
+              <input data-entity-field type="hidden" name="cliente-paciente--key">
+              <div class="field nome">
                 <label>Nome</label>
-                <input data-entity-field name="client-patient--nome" type="text">
+                <input data-entity-field name="cliente-paciente--nome" type="text">
               </div>
-              <div id="field-genero" class="field">
+              <div class="field genero">
                 <label>Gênero</label>
-                <input type="radio" 
-                  id="cliente-patient--genero-m"
-                  name="client-patient--genero"
-                  value="masculino"><label for="cliente-patient--genero-m">Masculino</label>
-                <input type="radio"
-                  id="cliente-patient--genero-f"
-                  name="client-patient--genero"
-                  value="feminino"><label for="cliente-patient--genero-f">Feminino</label>
+                <input data-entity-field type="radio" 
+                  id="cliente-paciente--genero-m"
+                  name="cliente-paciente--genero"
+                  value="masculino"><label for="cliente-paciente--genero-m">Masculino</label>
+                <input data-entity-field type="radio"
+                  id="cliente-paciente--genero-f"
+                  name="cliente-paciente--genero"
+                  value="feminino"><label for="cliente-paciente--genero-f">Feminino</label>
               </div>
-              <div id="field-especie" class="field">
+              <div class="field especie">
                 <label>Espécie</label>
                 <input data-entity-field
                        type="radio"
-                       name="client-patient--especie"
-                       id="client-patient--especie"
+                       name="cliente-paciente--especie"
+                       id="cliente-paciente--especie"
                        value="canino">
-                <label for="client-patient--especie">🐶 Canino</label>
+                <label for="cliente-paciente--especie">🐶 Canino</label>
                 <input data-entity-field
                        type="radio"
-                       name="client-patient--especie"
-                       id="client-patient-especie--felino"
+                       name="cliente-paciente--especie"
+                       id="cliente-paciente-especie--felino"
                        value="felino">
-                <label for="client-patient-especie--felino">😹 Felino</label>
+                <label for="cliente-paciente-especie--felino">😹 Felino</label>
               </div>
-              <div id="field-nascimento" class="field">
+              <div class="field nascimento">
                 <label>Nascimento</label>
                 <input data-entity-field
-                  name="client-patient--nascimento" type="date">
+                  name="cliente-paciente--nascimento" type="date">
               </div>
-              <div id="field-raca" class="field">
+              <div class="field raca">
                 <label>Raça</label>
                 <input data-entity-field
-                  name="client-patient--raca" type="text">
+                  name="cliente-paciente--raca" type="text">
               </div>
-              <div id="field-pelagem" class="field">
+              <div class="field pelagem">
                 <label>Pelagem</label>
                 <input data-entity-field
-                  name="client-patient--pelagem" type="text">
+                  name="cliente-paciente--pelagem" type="text">
               </div>
-              <div id="field-situacao-falecido">
-                <label for="patient-falecido-">Falecido</label>
+              <div class="field situacao-falecido">
+                <label for="paciente--falecido">Falecido</label>
                 <input data-entity-field
-                  name="client-patient--falecido" id="patient--falecido" type="checkbox" >
+                  name="cliente-paciente--falecido" id="paciente--falecido" type="checkbox" >
               </div>
             </fieldset>
           </template>
         </fieldset>
       </template>
 
-      <template id="list-client">
-        <section class="list" >
+      <template id="tpl-cliente-lista">
+        <section class="list clientes" >
           <header>
             <h1>Clientes cadastrados</h1>
           </header>
@@ -267,40 +276,40 @@
               </tr>
             </thead>
             <tbody>
-          <template id="card-client">
-              <tr data-entity="client">
-                <td data-entity-field="nome" class="nome"></td>
-                <td data-entity-field="patient" class="pacientes">
-                  <template>
-                    <button data-entity-field="nome"
-                      data-entity-attributes="data-entity-key:key"
-                      onclick="AppActions.pacienteFull(this.getAttribute('data-entity-key'))"
-                      ></button>
-                  </template>
-                </td>
-                <td data-entity-field="telefone" class="telefone"></td>
-                <td data-entity-field="email" class="email"></td>
-                <td class="actions">
-                  <button title="editar" class="edit"
-                    data-entity-attributes="data-entity-key:key"
-                    onclick="AppActions.formClient(this.getAttribute('data-entity-key'))"></button>
-                  <button title="apagar" class="delete" action=""></button>
-                </td>
-              </tr>
-          </template>
+              <template id="tpl-cliente-cartao">
+                <tr data-entity="cliente">
+                  <td data-entity-field="nome" class="nome"></td>
+                  <td data-entity-field="paciente" class="pacientes">
+                    <template>
+                      <button data-entity-field="nome"
+                              data-entity-attributes="data-entity-key:key"
+                              onclick="AppActions.pacienteFull(this.getAttribute('data-entity-key'))"
+                              ></button>
+                    </template>
+                  </td>
+                  <td data-entity-field="telefone" class="telefone"></td>
+                  <td data-entity-field="email" class="email"></td>
+                  <td class="actions">
+                    <button title="editar" class="edit"
+                                           data-entity-attributes="data-entity-key:key"
+                                           onclick="AppActions.formClient(this.getAttribute('data-entity-key'))"></button>
+                    <button title="apagar" class="delete" action=""></button>
+                  </td>
+                </tr>
+              </template>
             </tbody>
           </table>
         </section>
       </template>
 
       <template id="prontuario">
-        <article data-entity="patient" id="paciente">
+        <article data-entity="paciente" id="paciente">
           <header>
             <aside class="tutor">
-              <h1 data-entity-field="client-nome"></h1>
-              <div data-entity-field="client-telefone"></div>
+              <h1 data-entity-field="cliente-nome"></h1>
+              <div data-entity-field="cliente-telefone"></div>
             </aside>
-            <section class="patient">
+            <section class="paciente">
               <h1 data-entity-field="nome"></h1>
               <div class="basic-info">
                 <span data-entity-field="raca"></span>
@@ -498,9 +507,9 @@
       </template>
 
     </section>
-    <section id="messages">
-      <template id="tpl-message">
-        <div class="message" onclick="quick.bye(this)"></div>
+    <section id="mensagens">
+      <template id="tpl-mensagem">
+        <div class="mensagem" onclick="quick.bye(this)"></div>
       </template>
     </section>
   </body>

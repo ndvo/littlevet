@@ -65,23 +65,23 @@ Server.setUpDatabase = function () {
     // Create Database
     request.onupgradeneeded = function (event) {
       const db = event.target.result
-      let objStore = db.createObjectStore('client', { keyPath: 'key' })
-      objStore.createIndex('name', 'name', { unique: false })
+      let objStore = db.createObjectStore('cliente', { keyPath: 'key' })
+      objStore.createIndex('nome', 'nome', { unique: false })
 
-      objStore = db.createObjectStore('patient', { keyPath: 'key' })
-      objStore.createIndex('name', 'name', { unique: false })
-      objStore.createIndex('species', 'species', { unique: false })
+      objStore = db.createObjectStore('paciente', { keyPath: 'key' })
+      objStore.createIndex('nome', 'nome', { unique: false })
+      objStore.createIndex('especie', 'especie', { unique: false })
 
-      objStore = db.createObjectStore('appointment', { keyPath: 'key' })
-      objStore.createIndex('date', 'date', { unique: false })
+      objStore = db.createObjectStore('consulta', { keyPath: 'key' })
+      objStore.createIndex('data', 'data', { unique: false })
 
-      objStore = db.createObjectStore('anamnesis', { keyPath: 'key' })
-      objStore.createIndex('date', 'date', { unique: false })
-      objStore.createIndex('patient', 'patient', { unique: false })
+      objStore = db.createObjectStore('anamnese', { keyPath: 'key' })
+      objStore.createIndex('data', 'data', { unique: false })
+      objStore.createIndex('paciente', 'paciente', { unique: false })
 
-      objStore = db.createObjectStore('exam', { keyPath: 'key' })
-      objStore.createIndex('date', 'date', { unique: false })
-      objStore.createIndex('patient', 'patient', { unique: false })
+      objStore = db.createObjectStore('exame', { keyPath: 'key' })
+      objStore.createIndex('data', 'data', { unique: false })
+      objStore.createIndex('paciente', 'paciente', { unique: false })
 
       db.createObjectStore('templates', { keyPath: 'key' })
     }

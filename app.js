@@ -4,7 +4,7 @@ import Entity from './entity.js'
 import Tests from './test.js'
 
 setUp()
-const appEl = document.querySelector('#application')
+const appEl = document.querySelector('#aplicacao')
 
 loading()
 
@@ -37,15 +37,15 @@ function start () {
 
   window.AppActions.listClient = function () {
     loading()
-    Stamp('#list-client')
-      .target('#application')
+    Stamp('#tpl-cliente-lista')
+      .target('#aplicacao')
       .clearAll()
       .stamp()
-    Entity.forEachInCollection('client',
+    Entity.forEachInCollection('cliente',
       function (client) {
         const c = client.value
         Entity.referenceToNesting(c, function complete (evt) {
-          Stamp('#card-client', { override: true })
+          Stamp('#tpl-cliente-cartao', { override: true })
             .change(el => {
               Entity.applyElement(c, el)
             })
@@ -58,11 +58,11 @@ function start () {
   window.AppActions.formClient = function (id) {
     stampFormClient()
     if (id) {
-      Server.getById('client', id,
+      Server.getById('cliente', id,
         (ev) => {
           const client = ev.target.result
           console.debug(client)
-          for (let p = 0; p < client.patient.length; p++) {
+          for (let p = 0; p < client['paciente'].length; p++) {
             Stamp('#tpl-paciente-form', { override: true })
               .change(function (element) {
                 uniquefy(element, p)
@@ -71,7 +71,7 @@ function start () {
           }
           Entity.applyElement(
             client,
-            document.querySelector('#application .client form'))
+            document.querySelector('#aplicacao .cliente form'))
         },
         console.debug
       )
@@ -89,7 +89,6 @@ function start () {
   }
 
   window.AppActions.stamp = function (id) {
-    console.debug('stamping')
     Stamp(id, { override: true })
       .clearAll()
       .stamp()
@@ -99,7 +98,7 @@ function start () {
     try {
       loading()
       const data = new FormData(e.target)
-      const entity = Entity.toEntity(data, 'client')
+      const entity = Entity.toEntity(data, 'cliente')
       Entity.storeAll(Entity.referencify(entity))
         .then(() => {
           stampMessage('Cliente salvo com sucesso', 'sucesso')
@@ -119,15 +118,15 @@ function start () {
   window.AppActions.pacienteFull = function (key) {
     loading()
     Server.db
-      .transaction('patient')
-      .objectStore('patient')
+      .transaction('paciente')
+      .objectStore('paciente')
       .get(key)
       .onsuccess = function (evt) {
         const entity = evt.target.result
         Entity.referenceToNesting(entity, function () {
           console.debug(entity)
           Stamp('#prontuario')
-            .target('#application')
+            .target('#aplicacao')
             .clearAll()
             .change(e => Entity.applyElement(entity, e))
             .stamp()
@@ -147,12 +146,12 @@ function start () {
   loadingEnd()
 }
 
-function loading(){
+function loading (){
   console.debug('loading')
   appEl.classList.add('loading')
 }
 
-function loadingEnd() {
+function loadingEnd () {
   appEl.classList.remove('loading')
 }
 
@@ -176,15 +175,16 @@ function uniquefy (element, count) {
 
 function stampFormClient () {
   let formId
-  Stamp('#form-client')
-    .target('#application')
+  Stamp('#tpl-cliente-form')
+    .target('#aplicacao')
     .clearAll()
     .change(function (element) {
       incrementCount(this)
-      formId = 'form-client' + this.count
+      formId = 'cliente-form-' + this.count
       element.setAttribute('id', formId)
     })
     .stamp()
+  // Stamp a new pacientes formset for the new cliente
   Stamp('#tpl-pacientes')
     .target('#' + formId + ' form')
     .change(function (element) {
@@ -194,6 +194,9 @@ function stampFormClient () {
     .stamp()
 }
 
+/**
+ * Includes retrieved templates in the head
+ */
 function prepareTemplates () {
   const templates = [
     'clients/full-form'
@@ -214,7 +217,7 @@ function prepareTemplates () {
  */
 function stampMessage (message, className) {
   console.debug('mensagem', message, className);
-  Stamp('#tpl-message')
+  Stamp('#tpl-mensagem')
     .change(el => {
       el.classList.add(className)
       el.textContent = message

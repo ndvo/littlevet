@@ -71,7 +71,7 @@ body {
 /* Grid */
 body > header { grid-area: header; }
 #sidebar { grid-area: sidebar;}
-#application{ grid-area: main;}
+#aplicacao{ grid-area: main;}
 
 
 /* Layout */
@@ -79,7 +79,7 @@ body > header {
   border-bottom: solid thin var(--color-theme-darker);
   margin-bottom: var(--space3);
 }
-#application{
+#aplicacao{
   padding: var(--space5);
 }
 
@@ -133,12 +133,12 @@ nav ul li a {
   cursor: pointer;
 }
 
-#application>* {
+#aplicacao>* {
   box-shadow: var(--float1);
   padding: var(--space6);
   margin: var(--space8) var(--space6);
 }
-#application>*:first-child {
+#aplicacao>*:first-child {
   margin-top: 0;
 }
 
@@ -280,13 +280,13 @@ td {
 /**
  * Messages
  */
-#messages {
+#mensagens {
   position: fixed;
   top: 0;
   left: 50%;
   transform: translateX(-50%);
 }
-#messages .message {
+#mensagens .mensagem {
   border: var(--color-theme-darker) solid thin;
   background-color: var(--color-theme-light);
   box-shadow: var(--space4) var(--space4) var(--space6) var(--color-foreground-faded);
@@ -301,10 +301,10 @@ td {
 /**
  * Loading indicator
  */
-#application.loading {
+#aplicacao.loading {
   cursor: progress;
 }
-#application.loading:before {
+#aplicacao.loading:before {
   content: "🕜";
   position: fixed;
   font-size: var(--space9);
@@ -324,7 +324,7 @@ td {
   border-radius: var(--space6);
   margin-right: 0;
 }
-:not(id='application').loading:after {
+:not(id='aplicacao').loading:after {
   content: "🕜";
   z-index: 1;
   position: absolute;
@@ -378,4 +378,14 @@ td {
   justify-items: stretch;
   margin-top: var(--space7);
   padding: var(--space7);
+}
+
+/**
+ * Mensagens de lista vazia
+ */
+.clientes tbody:empty:before {
+  content: "Não há qualquer cliente cadastrado";
+  display: block;
+  border: solid var(--color-theme-darker) thin;
+  padding: var(--space5);
 }

@@ -109,7 +109,7 @@ const Entity = {
           if (!fieldRaw) fieldRaw = el.getAttribute('name')
           const field = fieldRaw.split('-')
 
-          // ignora o primeiro elemento se for igual ao nome da entidade
+          // ignores first element if it is equal to the entity name
           if (field[0] == entity.entity) {
             field.shift()
           }
@@ -182,9 +182,12 @@ const Entity = {
   setElementRelevantValue (el, value) {
     switch (el.tagName) {
       case 'INPUT':
-        if ((el.type == 'checkbox' && value == 'on') || 
-        (el.type == 'radio' && el.value == value)) {
-          el.checked = true
+        if (el.type == 'checkbox') {
+          if (value == 'on') el.checked = true
+          break
+        } else if (el.type == 'radio') {
+          console.debug(el, value)
+          if (el.value == value) el.checked = true
           break
         } else {
           // fall through
@@ -308,7 +311,6 @@ const Entity = {
 
   /**
    * Un-nest entities, leaving references where there was nested
-   *
    */
   referencify (entity, entities = null) {
     if (!entities) entities = [entity]
