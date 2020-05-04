@@ -1,5 +1,24 @@
 import Server from './server.js'
 
+/**
+ * An entity is an object with an entity attribute that specifies the database
+ * table it is stored in.
+ *
+ * - toEntityy: creates an entity object given some data.
+ * - applyElement: sets textContent of child elements to attribute values if
+ *   they have data-entity-field attribute
+ * - referencify: converts an entity object to a list of entity objects
+ *   replacing nested objects with their keys and adding them to the list. It
+ *   'flattens' an object.
+ * - nestify: for all attributes of an object, if they are keys, replace them
+ *   with the actual entity refered to.
+ * - keyfy: creates key for all entities without keys in an object.
+ *
+ *   Entity object
+ *   Name pattern
+ *   Field object
+ */
+
 const Entity = {
 
   /**
@@ -179,6 +198,13 @@ const Entity = {
     }
   },
 
+  /** Sets the main content of an element
+   *
+   * Some elements, like inputs, do not have contentText.
+   * This function will set the 'relevant' value of the element, that is:
+   * value for checkbox, radio and select
+   * textContent for the others
+   */
   setElementRelevantValue (el, value) {
     switch (el.tagName) {
       case 'INPUT':
@@ -200,6 +226,10 @@ const Entity = {
   aggregateFields (fields) {
   },
 
+  /**
+   * Checks if a value is numeric
+   * TODO: this function does not belong here
+   */
   isNumeric (n) {
     return !isNaN(parseFloat(n)) && isFinite(n)
   },
@@ -208,9 +238,11 @@ const Entity = {
    * Converts the name of an input into a standardized form
    *
    * Standard form:
-   * parent-position-entity-position-field-position
+   * [parent-position-]entity-position-field-position
+   *
+   * If parent is given and is not already set, it is included.
    */
-  fixName (name, collection = null) {
+  fixName (name, parent = null) {
     const splited = name.split('-')
     let c = 0
     while (c++ < splited.length) {
@@ -220,14 +252,20 @@ const Entity = {
     }
     if (
       splited.length < 5 &&
-      collection
+      parent
     ) {
       splited.unshift(0)
-      splited.unshift(collection)
+      splited.unshift(parent)
     }
     return splited.join('-')
   },
 
+  /**
+   * Checks if a name adheres to the pattern
+   *
+   * Standard form:
+   * [parent-position-]entity-position-field-position
+   */
   validName (name) {
     const splited = name.split('-')
     if (splited.length % 2) { return false }
@@ -237,13 +275,16 @@ const Entity = {
     return true
   },
 
+  /**
+   * Converts a field object into a name pattern
+   */
   attributesToName (a) {
     if (!a.position) { a.position = '' }
     return `${a.entity}-${a.field}-${a.position}`
   },
 
   /**
-   * Converts a name to a field object
+   * Converts a name pattern to a field object
    *
    */
   nameToAttributes (name) {
@@ -259,6 +300,9 @@ const Entity = {
     }
   },
 
+  /**
+   * Executes actionEach on every entity in a collectino
+   */
   forEachInCollection (collection, actionEach) {
     return new Promise((resolve, reject) => {
       const transaction = Server.db.transaction(collection)
