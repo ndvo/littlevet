@@ -322,7 +322,9 @@
               </div>
             </section>
             <section class="actions">
-              <button class="add" onclick="AppActions.stamp('#tpl-atendimento')">
+              <button class="add" 
+                      data-entity-attributes="data-entity-key:key"
+                      onclick="AppActions.formAtendimento(this.getAttribute('data-entity-key'))">
                 Atendimento 
               </button>
               <button class="add" onclick="AppActions.stamp('#tpl-retorno')">Retorno</button>
@@ -336,8 +338,7 @@
               <template id="tpl-historico">
                 <button class="history-entry">
                   <span data-entity-field="date"></span>
-                  <span data-entity-field="nome"></span>
-                  <span data-entity-field="valor"></span>
+                  <span data-entity-field="entity"></span>
                 </button>
               </template>
 
@@ -346,7 +347,15 @@
 
               <template id="tpl-atendimento">
                 <article id="form atendimento">
-                  <form class="atendimento">
+                  <form
+                      class="atendimento"
+                      onsubmit="return AppActions.saveAtendimento(event)" >
+                    <input data-entity-field
+                      type="hidden" 
+                      name="anamnese-key">
+                    <input data-entity-field
+                      type="hidden" 
+                      name="anamnese-paciente">
                     <header class="action-header">
                       <h1>Adicionar atendimento</h1>
                       <div class="actions">
@@ -358,14 +367,17 @@
                                 >Salvar</button>
                       </div>
                     </header>
+                    <input data-entity-field
+                           type="date"
+                           name="anamnese-data">
                     <fieldset>
                       <legend>Anamnese</legend>
 
                       <div class="field">
-                        <label for="atendimento-anamnese">Queixa Principal</label>
+                        <label for="anamnese-queixaPrincipal">Queixa Principal</label>
                         <textarea data-entity-field
-                               name="atendimento-queixaPrincipal"
-                               id="atendimento-queixaPrincipal"
+                               name="anamnese-queixaPrincipal"
+                               id="anamnese-queixaPrincipal"
                                autocomplete="true"
                                ></textarea>
                       </div>
@@ -373,37 +385,44 @@
                       <div class="field">
                         <label >Ambiente</label>
                         <input data-entity-field
-                           id="atendimento-ambiente"
-                           name="atendimento-ambiente"/>
+                               id="anamnese-ambiente"
+                               autocomplete="true"
+                               name="anamnese-ambiente"/>
                       </div>
                       <div class="field">
                         <label >Alimentação</label>
                         <input data-entity-field
-                           id="atendimento-alimentacao"
-                           name="atendimento-alimentacao" />
+                               id="anamnese-alimentacao"
+                               autocomplete="true"
+                               name="anamnese-alimentacao" />
                       </div>
                       <div class="field">
                         <label >Vacinação</label>
                         <input data-entity-field
-                           id="atendimento-vacinacao"
-                           name="atendimento-vacinacao" />
+                               autocomplete="true"
+                               id="anamnese-vacinacao"
+                               name="anamnese-vacinacao" />
                       </div>
                       <div class="field">
                         <label >Vermifugação</label>
                         <input data-entity-field
-                           id="atendimento-vermifugacao"
-                           name="atendimento-vermifugacao" />
+                               autocomplete="true"
+                               id="anamnese-vermifugacao"
+                               name="anamnese-vermifugacao" />
                       </div>
                       <div class="field">
                         <label >Ectoparasitas</label>
                         <input data-entity-field
-                           id="atendimento-ectoparasitas"
-                           name="atendimento-ectoparasitas" />
+                               autocomplete="true"
+                               id="anamnese-ectoparasitas"
+                               name="anamnese-ectoparasitas" />
                       </div>
                       <div class="field">
                         <label>Histórico médico</label>
-                        <textarea id="atendimento-historico"
-                                  name="atendimento-historico" ></textarea>
+                        <textarea  data-entity-field
+                                   id="anamnese-historico"
+                                   autocomplete="true"
+                                   name="anamnese-historico" ></textarea>
                       </div>
                     </fieldset>
 
@@ -411,88 +430,111 @@
                       <legend>Exame Clínico</legend>
                       <fieldset>
                         <legend>Sistema Cardiovascular</legend>
-                        <label class="parametro">FC (bpm) <input name="atendimento-fc"></label>
-                        <label class="parametro">FR (mpm) <input name="atendimento-fr"></label>
-                        <label class="parametro">PAS <input name="atendimento-ps"></label>
-                        <label class="parametro">PAD <input name="atendimento-pd"></label>
+                        <label class="parametro">FC (bpm) 
+                          <input data-entity-field
+                                 name="anamnese-fc"></label>
+                        <label class="parametro">FR (mpm) 
+                          <input data-entity-field
+                                 name="anamnese-fr"></label>
+                        <label class="parametro">PAS 
+                          <input data-entity-field
+                                 name="anamnese-ps"></label>
+                        <label class="parametro">PAD 
+                          <input data-entity-field
+                                 name="anamnese-pd"></label>
                         <div class="field">
                           <label>Tempo de preenchimento capilar (seg)</label>
-                          <input name="atendimento-tempopreenchimento">
+                          <input  data-entity-field
+                                  name="anamnese-tempopreenchimento">
                         </div>
 
                         <div class="field">
                           <label>Pulso arterial</label>
-                          <button type="button" class="ok" onclick="quick.semAlteracao(this)"></button>
-                          <input type="text" name="atendimento.pulso_arterial">
+                          <button type="button" 
+                                  class="ok" 
+                                  onclick="quick.semAlteracao(this)"></button>
+                          <input data-entity-field
+                                 type="text"
+                                 name="atendimento.pulso_arterial">
                         </div>
 
                       </fieldset>
 
                       <div class="field">
                         <label>Temperatura</label>
-                        <input  name="atendimento-temperatura" type="number">
+                        <input data-entity-field
+                               name="anamnese-temperatura" type="number">
                       </div>
 
 
                       <div class="field">
                         <label>Mucosas</label>
                         <button type="button" class="ok" onclick="quick.semAlteracao(this)"></button>
-                        <input type="text" name="atendimento-mucosas">
+                        <input  data-entity-field
+                                type="text" name="anamnese-mucosas">
                       </div>
 
                       <div class="field">
                         <label>Cavidade oral</label>
                         <button type="button" class="ok" onclick="quick.semAlteracao(this)"></button>
-                        <input type="text" name="atendimento-cavidade_oral">
+                        <input data-entity-field
+                               type="text" name="anamnese-cavidade_oral">
                       </div>
 
                       <div class="field">
                         <label>Hidratação</label>
                         <button type="button" class="ok" onclick="quick.semAlteracao(this)"></button>
-                        <input type="text" name="atendimento-hidratacao">
+                        <input data-entity-field
+                               type="text" name="anamnese-hidratacao">
                       </div>
 
 
                       <div class="field">
                         <label>Orelhas/ouvido</label>
                         <button type="button" class="ok" onclick="quick.semAlteracao(this)"></button>
-                        <input type="text" name="atendimento-orelas_ouvido">
+                        <input data-entity-field
+                               type="text" name="anamnese-orelas_ouvido">
                       </div>
 
                       <div class="field">
                         <label>Linfonodos</label>
                         <button type="button" class="ok" onclick="quick.semAlteracao(this)"></button>
-                        <input type="text" name="atendimento-linfonodos">
+                        <input data-entity-field
+                               type="text" name="anamnese-linfonodos">
                       </div>
 
                       <div class="field">
                         <label>Pele/Pêlo</label>
                         <button type="button" class="ok" onclick="quick.semAlteracao(this)"></button>
-                        <input type="text" name="atendimento-pele_pelo">
+                        <input data-entity-field
+                               type="text" name="anamnese-pele_pelo">
                       </div>
 
                       <div class="field">
                         <label>Palpação abdominal</label>
                         <button type="button" class="ok" onclick="quick.semAlteracao(this)"></button>
-                        <textarea name="atendimento-palpacaoAbdominal"></textarea>
+                        <textarea name="anamnese-palpacaoAbdominal"></textarea>
                       </div>
 
                       <div class="field">
                         <label>Borborigmo</label>
                         <button type="button" class="ok" onclick="quick.semAlteracao(this)"></button>
-                        <input type="text" name="atendimento-borborigmo">
+                        <input data-entity-field
+                               type="text" name="anamnese-borborigmo">
                       </div>
 
                       <div class="field">
                         <label>Sistema Cardiorrespiratório</label>
                         <button type="button" class="ok" onclick="quick.semAlteracao(this)"></button>
-                        <input type="text" name="atendimento-genital">
+                        <input data-entity-field
+                               type="text" name="anamnese-genital">
                       </div>
 
                       <div class="field">
                         <label>AVDN</label>
                         <button type="button" class="ok" onclick="quick.semAlteracao(this)"></button>
-                        <input type="text" name="atendimento-avdn">
+                        <input data-entity-field
+                               type="text" name="anamnese-avdn">
                       </div>
 
                     </fieldset>

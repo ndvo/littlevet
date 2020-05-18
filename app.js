@@ -88,6 +88,17 @@ function start () {
       .stamp()
   }
 
+  window.AppActions.formAtendimento = function(pacienteKey) {
+    loading()
+    Stamp('#tpl-atendimento', {override: true})
+      .clearAll()
+      .change(function (element) {
+        var keyInput = element.querySelector('[name=anamnese-paciente]')
+        keyInput.value = pacienteKey
+      })
+      .stamp(loadingEnd)
+  }
+
   window.AppActions.stamp = function (id) {
     Stamp(id, { override: true })
       .clearAll()
@@ -115,24 +126,54 @@ function start () {
     return false
   }
 
+  window.AppActions.saveAtendimento = function (e) {
+    try {
+      loading()
+      storeEntityFromForm(
+        e,
+        'anamnese',
+        'Atendimento salvo com sucesso',
+        'Ocorreu um erro ao salvar'
+      )
+    } catch (e) {
+      console.error(e)
+      loadingEnd()
+    }
+    return false
+  }
+
   window.AppActions.pacienteFull = function (key) {
     loading()
-    Server.db
-      .transaction('paciente')
+    var transaction = Server.db
+      .transaction(['paciente', 'anamnese'])
+    transaction
       .objectStore('paciente')
       .get(key)
       .onsuccess = function (evt) {
         const entity = evt.target.result
         Entity.referenceToNesting(entity, function () {
-          console.debug(entity)
           Stamp('#prontuario')
             .target('#aplicacao')
             .clearAll()
             .change(e => Entity.applyElement(entity, e))
-            .stamp()
-          loadingEnd()
+            .stamp( loadingEnd())
         })
       }
+    transaction
+      .objectStore('anamnese')
+      .index('paciente')
+      .getAll(key)
+      .onsuccess = function (evt) {
+        const entities = evt.target.result
+        for (var entity of entities) {
+          Entity.referenceToNesting(entity, function () {
+            Stamp('#paciente #tpl-historico')
+              .change(e => Entity.applyElement(entity, e))
+              .stamp(loadingEnd)
+          })
+        }
+      }
+
   }
 
   window.quick.semAlteracao = function (e) {
@@ -145,6 +186,7 @@ function start () {
 
   loadingEnd()
 }
+
 
 function loading (){
   console.debug('loading')
@@ -225,3 +267,28 @@ function stampMessage (message, className) {
     })
     .stamp()
 }
+
+/** Stores an entity from a form */
+function storeEntityFromForm (event, collection, successMessage, errorMessage) {
+  var e = event
+  try {
+    loading()
+    const data = new FormData(e.target)
+    const entity = Entity.toEntity(data, collection)
+    console.debug(collection, data)
+    Entity.storeAll(Entity.referencify(entity))
+      .then(() => {
+        stampMessage(successMessage, 'sucesso')
+        loadingEnd()
+      })
+      .catch(() => {
+        stampMessage(errorMessage, 'erro')
+        loadingEnd()
+      })
+  } catch (e) {
+    console.error(e)
+    loadingEnd()
+  }
+  return false
+}
+
