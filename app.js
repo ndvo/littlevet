@@ -88,13 +88,30 @@ function start () {
       .stamp()
   }
 
-  window.AppActions.formAtendimento = function(pacienteKey) {
+  window.AppActions.formAtendimento = function(
+    pacienteKey, atendimentoKey
+  ) {
     loading()
     Stamp('#tpl-atendimento', {override: true})
       .clearAll()
       .change(function (element) {
         var keyInput = element.querySelector('[name=anamnese-paciente]')
-        keyInput.value = pacienteKey
+        if (pacienteKey) keyInput.value = pacienteKey
+        console.debug(atendimentoKey)
+        if (atendimentoKey) {
+          Server.getById('anamnese', atendimentoKey,
+            (ev) => {
+              const atendimento = ev.target.result
+              console.debug(atendimento)
+              
+              Entity.applyElement(
+                atendimento,
+                element
+              )
+            },
+            console.debug
+          )
+        }
       })
       .stamp(loadingEnd)
   }
@@ -165,15 +182,20 @@ function start () {
       .getAll(key)
       .onsuccess = function (evt) {
         const entities = evt.target.result
+        console.debug(entities)
         for (var entity of entities) {
-          Entity.referenceToNesting(entity, function () {
+          const etty = entity
+          Entity.referenceToNesting(etty, function () {
             Stamp('#paciente #tpl-historico')
-              .change(e => Entity.applyElement(entity, e))
+              .change(e => {
+                  e.setAttribute('data-entity-key', etty.key)
+                console.debug(etty)
+                  Entity.applyElement(etty, e)
+              })
               .stamp(loadingEnd)
           })
         }
       }
-
   }
 
   window.quick.semAlteracao = function (e) {

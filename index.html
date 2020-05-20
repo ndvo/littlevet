@@ -336,8 +336,13 @@
                 <h1>Histórico</h1>
               </header>
               <template id="tpl-historico">
-                <button class="history-entry">
-                  <span data-entity-field="date"></span>
+                <button class="history-entry"
+                        data-entity-attributes="data-entity-key:key"
+                        type="button"
+                        onclick="AppActions.formAtendimento(null, this.getAttribute('data-entity-key'))"
+
+                  >
+                  <span data-entity-field="data"></span>
                   <span data-entity-field="entity"></span>
                 </button>
               </template>

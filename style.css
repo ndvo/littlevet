@@ -372,12 +372,27 @@ td {
 #paciente .painel {
   border: solid var(--color-theme-darker) thin;
   display: flex;
-  flex-grow: 1; 
-  flex-wrap: wrap;
   justify-content: space-between;
   justify-items: stretch;
   margin-top: var(--space7);
   padding: var(--space7);
+}
+
+#paciente .painel>section:first-child {
+  margin-right: var(--space7);
+}
+
+#paciente .painel .historico {
+  min-width: 250px;
+}
+
+.historico header {
+  position: sticky;
+  top: 0;
+}
+.historico button.history-entry {
+  display: block;
+  margin: var(--space7) auto;
 }
 
 /**
@@ -389,3 +404,6 @@ td {
   border: solid var(--color-theme-darker) thin;
   padding: var(--space5);
 }
+
+
+
