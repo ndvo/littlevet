@@ -20,7 +20,7 @@
               <img class="icon" > Home
             </a>
           </li>
-          <li><a><img class="icon"> Agenda</a></li>
+          <li><a onclick="AppActions.listAgenda()"><img class="icon"> Agenda</a></li>
           <li>
             <a>
               <img class="icon"> Clientes 
@@ -553,13 +553,40 @@
 
       </template>
 
+      <template id="tpl_agenda">
+        <section id="agenda">
+          <header class="action-header">
+            <h1>Agenda</h1>
+          </header>
+            <table class="dia">
+              <caption></caption>
+              <thead>
+              <tr>
+                <th>Hora</th><th>Compromisso</th>
+              </tr>
+              <tr>
+                <template id="tpl_evento">
+                  <tr>
+                    <td class="hora"></td>
+                    <td class="compromisso">
+                      <span class="titulo"></span>
+                      <span class="descricao"></span> 
+                    </td> 
+                  </tr>
+                </template>
+              </tr>
+              </thead>
+            </table>
+        </section>
+      </template>
+
     </section>
     <section id="mensagens">
       <template id="tpl-mensagem">
         <div class="mensagem" onclick="quick.bye(this)"></div>
       </template>
     </section>
+
+    <script async defer src="https://apis.google.com/js/api.js" ></script>
   </body>
-
-
 </html>

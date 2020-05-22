@@ -9,6 +9,7 @@ const appEl = document.querySelector('#aplicacao')
 loading()
 
 function setUp () {
+  loadCredentials()
   Server.setUpDatabase()
     .then(
       // prepareTemplates,
@@ -62,7 +63,7 @@ function start () {
         (ev) => {
           const client = ev.target.result
           console.debug(client)
-          for (let p = 0; p < client['paciente'].length; p++) {
+          for (let p = 0; p < client.paciente.length; p++) {
             Stamp('#tpl-paciente-form', { override: true })
               .change(function (element) {
                 uniquefy(element, p)
@@ -88,11 +89,11 @@ function start () {
       .stamp()
   }
 
-  window.AppActions.formAtendimento = function(
+  window.AppActions.formAtendimento = function (
     pacienteKey, atendimentoKey
   ) {
     loading()
-    Stamp('#tpl-atendimento', {override: true})
+    Stamp('#tpl-atendimento', { override: true })
       .clearAll()
       .change(function (element) {
         var keyInput = element.querySelector('[name=anamnese-paciente]')
@@ -103,7 +104,7 @@ function start () {
             (ev) => {
               const atendimento = ev.target.result
               console.debug(atendimento)
-              
+
               Entity.applyElement(
                 atendimento,
                 element
@@ -173,7 +174,7 @@ function start () {
             .target('#aplicacao')
             .clearAll()
             .change(e => Entity.applyElement(entity, e))
-            .stamp( loadingEnd())
+            .stamp(loadingEnd())
         })
       }
     transaction
@@ -188,9 +189,9 @@ function start () {
           Entity.referenceToNesting(etty, function () {
             Stamp('#paciente #tpl-historico')
               .change(e => {
-                  e.setAttribute('data-entity-key', etty.key)
+                e.setAttribute('data-entity-key', etty.key)
                 console.debug(etty)
-                  Entity.applyElement(etty, e)
+                Entity.applyElement(etty, e)
               })
               .stamp(loadingEnd)
           })
@@ -206,11 +207,16 @@ function start () {
     e.parentElement.removeChild(e)
   }
 
+  window.AppActions.listAgenda = function () {
+    Stamp('#tpl_agenda', { override: true })
+      .clearAll()
+      .stamp(mostrarCompromissos)
+  }
+
   loadingEnd()
 }
 
-
-function loading (){
+function loading () {
   console.debug('loading')
   appEl.classList.add('loading')
 }
@@ -220,7 +226,7 @@ function loadingEnd () {
 }
 
 function incrementCount (o) {
-  if (typeof o.count == 'number') o.count += 1
+  if (typeof o.count === 'number') o.count += 1
   else o.count = 0
 }
 
@@ -280,7 +286,7 @@ function prepareTemplates () {
  * return a function that adds a temporary message to the site
  */
 function stampMessage (message, className) {
-  console.debug('mensagem', message, className);
+  console.debug('mensagem', message, className)
   Stamp('#tpl-mensagem')
     .change(el => {
       el.classList.add(className)
@@ -314,3 +320,133 @@ function storeEntityFromForm (event, collection, successMessage, errorMessage) {
   return false
 }
 
+/*** Google Calendar ***/
+
+/**
+ *  On load, called to load the auth2 library and API client library.
+ */
+function handleClientLoad () {
+  // gapi.load('client:auth2', initClient);
+}
+
+function mostrarCompromissos () {
+  gapi.load('client:auth2', initClient)
+}
+
+/**
+ *  Initializes the API client library and sets up sign-in state
+ *  listeners.
+ */
+function initClient () {
+  var CLIENT_ID = credentials.web.client_id
+  var API_KEY = credentials.calendar_api_key
+
+  // Array of API discovery doc URLs for APIs used by the quickstart
+  var DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest']
+
+  // Authorization scopes required by the API; multiple scopes can be
+  // included, separated by spaces.
+  var SCOPES = 'https://www.googleapis.com/auth/calendar.readonly'
+
+  gapi.client.init({
+    apiKey: API_KEY,
+    clientId: CLIENT_ID,
+    discoveryDocs: DISCOVERY_DOCS,
+    scope: SCOPES
+  }).then(function () {
+    // Listen for sign-in state changes.
+    gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus)
+    // Handle the initial sign-in state.
+    if (!gapi.auth2.getAuthInstance().isSignedIn.get()) {
+      gapi.auth2.getAuthInstance().signIn()
+    } else {
+      listUpcomingEvents()
+    }
+  }, function (error) {
+    appendPre(JSON.stringify(error, null, 2))
+  })
+}
+
+/**
+ *  Called when the signed in status changes, to update the UI
+ *  appropriately. After a sign-in, the API is called.
+ */
+function updateSigninStatus (isSignedIn) {
+  if (isSignedIn) {
+    listUpcomingEvents()
+  } else {
+  }
+}
+
+/**
+ *  Sign in the user upon button click.
+ */
+function handleAuthClick (event) {
+  gapi.auth2.getAuthInstance().signIn()
+}
+
+/**
+ *  Sign out the user upon button click.
+ */
+function handleSignoutClick (event) {
+  gapi.auth2.getAuthInstance().signOut()
+}
+
+/**
+ * Append a pre element to the body containing the given message
+ * as its text node. Used to display the results of the API call.
+ *
+ * @param {string} message Text to be placed in pre element.
+ */
+function appendPre (message) {
+  console.log(message)
+}
+
+/**
+ * Print the summary and start datetime/date of the next ten events in
+ * the authorized user's calendar. If no events are found an
+ * appropriate message is printed.
+ */
+function listUpcomingEvents () {
+  gapi.client.calendar.events.list({
+    calendarId: 'primary',
+    timeMin: (new Date()).toISOString(),
+    showDeleted: false,
+    singleEvents: true,
+    maxResults: 10,
+    orderBy: 'startTime'
+  }).then(function (response) {
+    var events = response.result.items
+    Stamp('#tpl_evento', { override: true })
+    if (events.length > 0) {
+      for (var i = 0; i < events.length; i++) {
+        var event = events[i]
+        var when = event.start.dateTime
+        if (!when) {
+          when = event.start.date
+        }
+        Stamp('#tpl_evento')
+          .change(el => {
+            el.querySelector('.hora').textContent = when
+            el.querySelector('.compromisso .titulo').textContent = event.summary
+            el.querySelector('.compromisso .descricao').textContent = event.description
+          })
+          .stamp()
+      }
+    } else {
+      Stamp('#tpl_evento')
+        .change(el => {
+          el.querySelector('.titulo').textCotent = 'Não há qualquer evento cadastrado'
+        })
+        .stamp()
+    }
+  })
+}
+
+var credentials
+function loadCredentials () {
+  fetch('/credentials.json')
+    .then(r => {
+      r.json().then(j => console.debug(j))
+    })
+}
