@@ -49,21 +49,21 @@ function start () {
           .change(el => {
             Entity.applyElement(c, el)
           })
+          .stamp()
+        Entity.referenceToNesting(c, function complete (evt) {
+          Stamp('#tpl-cliente-cartao', { override: true })
+            .change(el => {
+              Entity.applyElement(c, el)
+            })
             .stamp()
-        //Entity.referenceToNesting(c, function complete (evt) {
-        //  console.debug('ran oncomplete');
-        //  Stamp('#tpl-cliente-cartao', { override: true })
-        //    .change(el => {
-        //      Entity.applyElement(c, el)
-        //    })
-        //    .stamp()
-        //})
+        })
       }
-    ).then(loadingEnd)
+    )
+      .then(loadingEnd)
       .catch((e) => {
-        console.error(e)
         stampMessage('Ocorreu um erro ao carregar', 'erro')
         loadingEnd()
+        throw e
       })
   }
 
