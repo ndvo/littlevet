@@ -45,15 +45,26 @@ function start () {
     Entity.forEachInCollection('cliente',
       function (client) {
         const c = client.value
-        Entity.referenceToNesting(c, function complete (evt) {
-          Stamp('#tpl-cliente-cartao', { override: true })
-            .change(el => {
-              Entity.applyElement(c, el)
-            })
+        Stamp('#tpl-cliente-cartao', { override: true })
+          .change(el => {
+            Entity.applyElement(c, el)
+          })
             .stamp()
-        })
+        //Entity.referenceToNesting(c, function complete (evt) {
+        //  console.debug('ran oncomplete');
+        //  Stamp('#tpl-cliente-cartao', { override: true })
+        //    .change(el => {
+        //      Entity.applyElement(c, el)
+        //    })
+        //    .stamp()
+        //})
       }
     ).then(loadingEnd)
+      .catch((e) => {
+        console.error(e)
+        stampMessage('Ocorreu um erro ao carregar', 'erro')
+        loadingEnd()
+      })
   }
 
   window.AppActions.formClient = function (id) {
@@ -63,7 +74,7 @@ function start () {
         (ev) => {
           const client = ev.target.result
           console.debug(client)
-          for (let p = 0; p < client.paciente.length; p++) {
+          for (let p = 0; p < client.paciente?.length; p++) {
             Stamp('#tpl-paciente-form', { override: true })
               .change(function (element) {
                 uniquefy(element, p)
