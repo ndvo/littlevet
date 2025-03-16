@@ -188,10 +188,10 @@ const Entity = {
         }
       } else {
         let el
-        if (entity && element.hasAttribute('data-entity-field')) {
-          el = element
-        } else {
+        if (element.constructor == DocumentFragment) {
           el = element.querySelector('[data-entity-field]')
+        } else {
+          el = element
         }
         this.setElementRelevantValue(el, entity)
       }
