@@ -20,7 +20,6 @@ import Server from './server.js'
  */
 
 const Entity = {
-
   /**
    * Creates local keys to allow locally stored items to be referenced before
    * remote persistance.
@@ -111,81 +110,11 @@ const Entity = {
    *
    */
   applyElement (entity, element) {
-    const pending = {}
     if (entity) {
       if (Array.isArray(entity)) {
-        const tpl = element.querySelector('template').content
-        for (const i of entity) {
-          const clone = tpl.cloneNode(true)
-          this.applyElement(i, clone)
-          element.append(clone)
-        }
+        this.applyArrayElement(entity, element)
       } else if (typeof entity === 'object') {
-        const deFields = element.querySelectorAll('[data-entity-field]')
-        for (const el of deFields) {
-          let willLoad = false
-          let fieldRaw = el.getAttribute('data-entity-field')
-          if (!fieldRaw) fieldRaw = el.getAttribute('name')
-          const field = fieldRaw.split('-')
-
-          // ignores first element if it is equal to the entity name
-          if (field[0] == entity.entity) {
-            field.shift()
-          }
-
-          let transaction
-          let value = entity
-          for (let f = 0; f < field.length; f++) {
-            if (typeof value == 'string' && value.match(/^\d+:0.\d+$/)) {
-              if (Array.isArray(pending[value])) {
-                pending[value].push(() => this.applyElement(entity, el.parentElement))
-                willLoad = true
-              } else {
-                pending[value] = [() => this.applyElement(entity, el.parentElement)]
-                const collection = field[field.length-3]
-                if (collection) {
-                  transaction = Server.db.transaction(collection)
-                  Server.db.transaction(collection)
-                    .objectStore(collection)
-                    .get(value)
-                    .onsuccess = r => {
-                      // Get a reference to the parent of the target field
-                      // given the structure: child-position-field, we need to
-                      // go back to child to set the retrieved element from the
-                      // database.
-                      // So we start from the original entity and walk up until
-                      // 3 items less than f
-                      let valueValue = entity
-                      for (let ff = 0; ff <= f - 3; ff++) {
-                        valueValue = valueValue[field[ff]]
-                      }
-                      valueValue[field[f-2]][field[f-1]] = r.target.result
-                      for (const func of pending[value]) {
-                        func.call()
-                      }
-                      pending[value] = []
-                    }
-                  willLoad = true
-                }
-              }
-            } else {
-              if (value) {
-                value = value[field[f]]
-              }
-            }
-          }
-          if (!willLoad) this.applyElement(value, el)
-        }
-        const elAttrs = element.querySelectorAll('[data-entity-attributes]')
-        for (const el of elAttrs) {
-          const attrs = el.getAttribute('data-entity-attributes').split(',')
-          for (const att of attrs) {
-            const keyValue = att.split(':')
-            if (!el.getAttribute(keyValue[0])) {
-              el.setAttribute(keyValue[0], entity[keyValue[1]])
-            }
-          }
-        }
+        this.applyDataEntityFieldElement(entity, element)
       } else {
         let el
         if (element.constructor == DocumentFragment) {
@@ -194,6 +123,90 @@ const Entity = {
           el = element
         }
         this.setElementRelevantValue(el, entity)
+      }
+    }
+  },
+
+  /**
+   * Fills element with data from array
+   */
+  applyArrayElement(entity, element) {
+    const tpl = element.querySelector('template').content
+    for (const i of entity) {
+      const clone = tpl.cloneNode(true)
+      this.applyElement(i, clone)
+      element.append(clone)
+    }
+  },
+
+  /**
+   * Fills element with data from a data-entity-field
+  */
+  applyDataEntityFieldElement(entity, element) {
+    const pending = {}
+    const deFields = element.querySelectorAll('[data-entity-field]')
+    for (const el of deFields) {
+      let willLoad = false
+      let fieldRaw = el.getAttribute('data-entity-field')
+      if (!fieldRaw) fieldRaw = el.getAttribute('name')
+      const field = fieldRaw.split('-')
+
+      // ignores first element if it is equal to the entity name
+      if (field[0] == entity.entity) {
+        field.shift()
+      }
+
+      let transaction
+      let value = entity
+      for (let f = 0; f < field.length; f++) {
+        if (typeof value == 'string' && value.match(/^\d+:0.\d+$/)) {
+          if (Array.isArray(pending[value])) {
+            pending[value].push(() => this.applyElement(entity, el.parentElement))
+            willLoad = true
+          } else {
+            pending[value] = [() => this.applyElement(entity, el.parentElement)]
+            const collection = field[field.length-3]
+            if (collection) {
+              transaction = Server.db.transaction(collection)
+              Server.db.transaction(collection)
+                .objectStore(collection)
+                .get(value)
+                .onsuccess = r => {
+                  // Get a reference to the parent of the target field
+                  // given the structure: child-position-field, we need to
+                  // go back to child to set the retrieved element from the
+                  // database.
+                  // So we start from the original entity and walk up until
+                  // 3 items less than f
+                  let valueValue = entity
+                  for (let ff = 0; ff <= f - 3; ff++) {
+                    valueValue = valueValue[field[ff]]
+                  }
+                  valueValue[field[f-2]][field[f-1]] = r.target.result
+                  for (const func of pending[value]) {
+                    func.call()
+                  }
+                  pending[value] = []
+                }
+              willLoad = true
+            }
+          }
+        } else {
+          if (value) {
+            value = value[field[f]]
+          }
+        }
+      }
+      if (!willLoad) this.applyElement(value, el)
+    }
+    const elAttrs = element.querySelectorAll('[data-entity-attributes]')
+    for (const el of elAttrs) {
+      const attrs = el.getAttribute('data-entity-attributes').split(',')
+      for (const att of attrs) {
+        const keyValue = att.split(':')
+        if (!el.getAttribute(keyValue[0])) {
+          el.setAttribute(keyValue[0], entity[keyValue[1]])
+        }
       }
     }
   },
@@ -386,8 +399,9 @@ const Entity = {
    */
   referenceToNesting (entity, complete, error = console.error) {
     const stores = Server.db.objectStoreNames
-    const keys = Object.keys(entity)
-    const transaction = Server.db.transaction(keys.filter(e => stores.contains(e)))
+    const keys = Object.keys(entity).filter(e => stores.contains(e))
+    if (!keys.length) return
+    const transaction = Server.db.transaction(keys)
     for (const entry of Object.entries(entity)) {
       if (stores.contains(entry[0])) {
         const collection = entry[0]
